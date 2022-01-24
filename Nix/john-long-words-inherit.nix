@@ -1,6 +1,6 @@
-specialArgs.symlink = nix-symlink.symlink;
+{ specialArgs.symlink = nix-symlink.symlink;
 specialArgs = { symlink = nix-symlink.symlink; };
-specialArgs = { inherit (nix-symlink) symlink; };
+specialArgs = { inherit (nix-symlink) symlink; }; } //
 
 
 # It takes a whole lot of characters for this to become efficient
