@@ -1,19 +1,11 @@
 with builtins; rec {
-  fixFlake =
-    flake:
-      if
-        isFunction flake
-      then
-        let
-          args = mapListToAttrs () (functionArgs flake);
-        in
-          foo (flake args)
-      else
-        if
-          isAttrs flake
-        then
-          bar
-        else notAFlake;
+  fixFlake = flake:
+    if isFunction flake then
+      let args = mapListToAttrs (bak) (functionArgs flake); in foo (flake args)
+    else if isAttrs flake then
+      bar
+    else
+      notAFlake;
 
   notAFlake = abort "Not a flake.";
 
@@ -23,24 +15,12 @@ with builtins; rec {
 
   registry = {
     linux-repos = {
-      tytau = {
-        uglysoup = "uglysoup";
-      };
-      nopkgs = {
-        nonstdenv = "nonstdenv";
-      };
-      full = {
-        ybps = "ypbs";
-      };
-      inapt = {
-        repkg = "repkg";
-      };
-      anchorage = {
-        submerge = "submerge";
-      };
-      misc = {
-        inky = "inky";
-      };
+      tytau = { uglysoup = "uglysoup"; };
+      nopkgs = { nonstdenv = "nonstdenv"; };
+      full = { ybps = "ypbs"; };
+      inapt = { repkg = "repkg"; };
+      anchorage = { submerge = "submerge"; };
+      misc = { inky = "inky"; };
     };
     linux-packages = {
       hello = "hello";
