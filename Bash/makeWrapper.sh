@@ -11,7 +11,3 @@ do
     mkdir -p $out/bin/$x
     makeWrapper $in/bin/$x $out/bin/$x $makeWrapperArgs
 done
-
-for x in $Others
-do
-    cp $in/$x $out/$x
