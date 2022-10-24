@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "binomial.h": "c",
+        "stdbool.h": "c",
+        "assert.h": "c"
+    }
+}
