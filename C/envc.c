@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 size_t envc(char **envp) {
     size_t size = 0;
@@ -8,4 +9,8 @@ size_t envc(char **envp) {
         size++;
     }
     return size;
+}
+
+int main(int argc, char** argv, char** envp) {
+    printf("%lld\n", (long long int) envc(envp));
 }
