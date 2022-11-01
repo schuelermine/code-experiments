@@ -1,85 +1,29 @@
-// WARNING! THIS DOESN’T WORK!
-
 #include <stddef.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include <stdlib.h>
+#include "printstrv.h"
 
-struct Invocation {
-    char* executable_name;
-    char** arguments;
+struct MyStruct {
+    int my_integer;
+    char* my_string;
+    char** my_string_array;
 };
 
-struct RunningProcess {
-    char* executable_path;
-    char* *root_path;
-    struct Invocation invocation;
-    char** *environment_variables;
-    char* *working_directory;
-    int process_id;
-};
-
-struct InvocationResult {
-    int *process_id;
-    bool success;
-};
-
-struct InvocationResult invocationFailure = {NULL, false};
-
-struct InvocationResult invocationSuccess(int process_id) {
-    struct InvocationResult result = {&process_id, true};
-    return result;
-}
-
-struct InvocationResult invoke_process(struct Invocation invocation) {
-    printf("Attempted to launch process %s", invocation.executable_name);
-    return invocationFailure;
-}
-
-struct InvocationResult reinvoke_process(struct RunningProcess process) {
-    struct Invocation invocation = process.invocation;
-    return invoke_process(invocation);
-}
-
-struct RunningProcess get_running_process() {
-    char* args[2] = {"-l", NULL};
-    struct Invocation invocation = {
-        "bash",
-        args
+// Allocates 3*char
+struct MyStruct mk_my_struct() {
+    char** my_string_array = malloc((2 + 1) * sizeof(char*));
+    my_string_array[0] = "3";
+    my_string_array[1] = "4";
+    my_string_array[2] = NULL;
+    struct MyStruct my_struct = {
+        1,
+        "2",
+        my_string_array
     };
-    char* environment_variables[1] = {NULL};
-    char root_path[2] = "/";
-    struct RunningProcess result = {
-        "/usr/bin/bash",
-        &root_path,
-        invocation,
-        &environment_variables,
-        &root_path,
-        111
-    };
-    return result;
-}
-
-// takes a null-terminated string array
-void print_string_array(char** array) {
-    printf("{");
-    while (*array != NULL) {
-        printf("\"%s\"", *array);
-        array++;
-        if (*array != NULL)
-            printf(", ");
-    }
-    printf("}");
-}
-
-void print_invocation(struct Invocation invocation) {
-    printf("{\n");
-    printf("\t%s,\n", invocation.executable_name);
-    printf("\t");
-    print_string_array(invocation.arguments);
-    printf("\n}");
+    return my_struct;
 }
 
 int main() {
-    struct RunningProcess process = get_running_process();
-    print_invocation(process.invocation);
+    struct MyStruct my_struct = mk_my_struct();
+    printstrv(my_struct.my_string_array);
+    free(my_struct.my_string_array);
 }

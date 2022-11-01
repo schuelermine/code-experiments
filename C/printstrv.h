@@ -1,0 +1,1 @@
+void printstrv(char** array);
