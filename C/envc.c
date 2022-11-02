@@ -10,7 +10,3 @@ size_t envc(char **envp) {
     }
     return size;
 }
-
-int main(int argc, char** argv, char** envp) {
-    printf("%lld\n", (long long int) envc(envp));
-}

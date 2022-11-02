@@ -11,6 +11,4 @@ void println(char *string) {
 
 int main(int argc, char **argv, char **envp) {
     foreach_string(&println, envp, envc(envp));
-
-    printf("%i", println);
 }
