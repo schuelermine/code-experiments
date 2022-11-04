@@ -1,3 +1,3 @@
 #include <stddef.h>
 
-size_t envc(char **envp);
+extern size_t envc(char **envp);

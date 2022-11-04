@@ -1,1 +1,1 @@
-void printstrv(char** array);
+extern void printstrv(char** array);
