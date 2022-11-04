@@ -18,6 +18,7 @@ void insertion_sort(int* array, size_t len) {
             compare_index >= 1 && array[compare_index - 1] > current_value_copy;
             compare_index--
         ) array[compare_index] = array[compare_index - 1];
+        // compare_index instead of compare_index - 1 because the for loop decrements one last time
         array[compare_index] = current_value_copy;
     }
 }
@@ -26,7 +27,7 @@ void quick_sort(int* array, size_t len) {
     if (len == 0) return;
     assert(len > 0);
     int pivot_copy = array[len - 1];
-    // Partition array and calculate pivot_index
+    // partition array and calculate pivot_index
     size_t pivot_index = 0;
     for (int current_index = 0; current_index < len - 1; current_index++) {
         if (array[current_index] < pivot_copy) {
@@ -35,6 +36,7 @@ void quick_sort(int* array, size_t len) {
         }
     }
     swap_array_members(array, pivot_index, len - 1);
+    // recursive part
     quick_sort(array, pivot_index);
     quick_sort(array + pivot_index, len - pivot_index - 1);
 }
@@ -42,6 +44,10 @@ void quick_sort(int* array, size_t len) {
 int* mk_random_array(int *len) {
     *len = rand() % 30;
     int* array = malloc(*len * sizeof(int));
+    if (array == NULL) {
+        perror("mk_random_array");
+        exit(1);
+    }
     for (int i = 0; i < *len; i++)
         array[i] = rand() % 100 - 40;
     return array;
