@@ -8,7 +8,7 @@
           bash
           clang
           fish
-          ghc
+          haskell.packages.ghc942.ghc
           openjdk
           nix
           nushell
