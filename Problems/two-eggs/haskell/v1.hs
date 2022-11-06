@@ -17,18 +17,6 @@ data F (n :: N) where
   FZ :: F n
   FS :: F n -> F ('S n)
 
-compareFN :: F n -> N -> Ordering
-compareFN FZ Z = EQ
-compareFN FZ _ = LT
-compareFN (FS _) Z = GT
-compareFN (FS f) (S n) = compareFN f n
-
-fLT :: F n -> F m -> Bool
-fLT FZ FZ = False
-fLT FZ _ = True
-fLT (FS _) FZ = False
-fLT (FS n) (FS m) = fLT n m
-
 deriving instance Show (F n)
 deriving instance Eq (F n)
 deriving instance Ord (F n)
