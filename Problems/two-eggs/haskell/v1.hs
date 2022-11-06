@@ -77,15 +77,13 @@ instance PerformStrategy Z f where
   performStrategy (FinallyDecide f) = Result {
     decidedFloor = f,
     brokenEggs = FZ,
-    steps = Z
-  }
+    steps = Z }
 
 instance PerformStrategy e f => PerformStrategy (S e) f where
   performStrategy (Decide f) = Result {
     decidedFloor = f,
     brokenEggs = FZ,
-    steps = Z
-  }
+    steps = Z }
   performStrategy DropEgg {..}
     = if floor < ?breakingPoint
       then let next = performStrategy eggBreaks
