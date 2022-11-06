@@ -106,21 +106,3 @@ instance PerformStrategy e f => PerformStrategy (S e) f where
           steps = S (next.steps) }
       else let next = performStrategy eggSurvives
         in next {steps = S (next.steps)}
-        
-performStrategyIsCorrect :: (?breakingPoint :: F (S f), PerformStrategy e f) => Strategy e f -> (Bool, Result e f)
-performStrategyIsCorrect strategy
-  = let result = performStrategy strategy
-    in (result.decidedFloor == ?breakingPoint, result)
-
-strategyData :: (?breakingPoint :: F (S f), PerformStrategy e f) => Strategy e f -> (Bool, Result e f, Strategy e f)
-strategyData strategy
-  = let (correct, result) = performStrategyIsCorrect strategy
-    in (correct, result, strategy)
-  
-allStrategyData n = strategyData <$> strategies n
-
-correctStrategyData n = filter (\(correct, _, _) -> correct) $ allStrategyData n
-
-fastestStrategy n
-  = let (_, _, strategy) = minimumBy (compare `on` (\(_, result, _) -> result.steps)) $ correctStrategyData n
-    in strategy
