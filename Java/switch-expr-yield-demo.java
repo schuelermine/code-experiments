@@ -1,4 +1,9 @@
 class Demonstration {
+  public static void main(String[] args) {
+    if (args.length != 1) return;
+    String input = args[0];
+    tryIt(input);
+  }
   public static boolean tryIt(String input) {
     int value = switch (input) {
       case "Case 1" -> 1;

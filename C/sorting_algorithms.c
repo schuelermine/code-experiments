@@ -1,12 +1,32 @@
+#include <stdbool.h>
 #include <stddef.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "printintv.h"
 
+#include "printintv.h"
 #include "swap_array_members.h"
 
-void insertion_sort(int* array, size_t len) {
+void bubble_sort_in_place(int* array, size_t len) {
+    if (len == 0) return;
+    assert(len > 0);
+    for (size_t j = len - 1; j >= 1; j--) {
+        bool sorted = true;
+        size_t i;
+        for (i = 0; i < j; i++)
+            if (array[i] > array[i + 1]) {
+                swap_array_members(array, i, i + 1);
+                sorted = false;
+                break;
+            }
+        for (; i < j; i++)
+            if (array[i] > array[i + 1])
+                swap_array_members(array, i, i + 1);
+        if (sorted) break;
+    }
+}
+
+void insertion_sort_in_place(int* array, size_t len) {
     if (len == 0) return;
     assert(len > 0);
     int current_value_copy;
@@ -23,26 +43,28 @@ void insertion_sort(int* array, size_t len) {
     }
 }
 
-void quick_sort(int* array, size_t len) {
+void quick_sort_in_place(int* array, size_t len) {
     if (len == 0) return;
     assert(len > 0);
     int pivot_copy = array[len - 1];
     // partition array and calculate pivot_index
     size_t pivot_index = 0;
-    for (int current_index = 0; current_index < len - 1; current_index++) {
-        if (array[current_index] < pivot_copy) {
+    for (size_t current_index = 0; current_index < len - 1; current_index++)
+        if (array[current_index] <= pivot_copy) {
             swap_array_members(array, pivot_index, current_index);
             pivot_index++;
         }
-    }
     swap_array_members(array, pivot_index, len - 1);
     // recursive part
-    quick_sort(array, pivot_index);
-    quick_sort(array + pivot_index, len - pivot_index - 1);
+    quick_sort_in_place(array, pivot_index);
+    quick_sort_in_place(array + pivot_index, len - pivot_index - 1);
 }
 
 int* mk_random_array(int *len) {
     *len = rand() % 30;
+    if (*len == 0) {
+        return malloc(0);
+    }
     int* array = malloc(*len * sizeof(int));
     if (array == NULL) {
         perror("mk_random_array");
@@ -53,7 +75,7 @@ int* mk_random_array(int *len) {
     return array;
 }
 
-void demonstrate_sort(void (*f)(int*, size_t)) {
+void demonstrate_sort_in_place(void (*f)(int*, size_t)) {
     int len;
     int* array = mk_random_array(&len);
     printintv(array, len);
@@ -68,7 +90,8 @@ int main(int argc, char** argv) {
     unsigned int seed;
     while (scanf("%u", &seed) <= 0);
     srand(seed);
-    demonstrate_sort(&insertion_sort);
-    demonstrate_sort(&quick_sort);
+    demonstrate_sort_in_place(&bubble_sort_in_place);
+    demonstrate_sort_in_place(&insertion_sort_in_place);
+    demonstrate_sort_in_place(&quick_sort_in_place);
     return 0;
 }

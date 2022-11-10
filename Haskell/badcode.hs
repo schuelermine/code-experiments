@@ -18,7 +18,7 @@ compareBase a (Lower b) = ifEQ GT (compareBase a b)
 compareBase a (Base b) = compare a b
 compareBase a (Higher b) = ifEQ LT (compareBase a b)
 
-ifEq :: Ordering -> Ordering -> Ordering
+ifEQ :: Ordering -> Ordering -> Ordering
 ifEQ base ordering = case ordering of
     EQ -> base
     x -> x
