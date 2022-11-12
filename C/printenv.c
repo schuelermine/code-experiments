@@ -1,6 +1,5 @@
 #include <stddef.h>
 #include <stdio.h>
-
 #include "define_foreach.h"
 #include "envc.h"
 
