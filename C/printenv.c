@@ -1,7 +1,7 @@
-#include <stddef.h>
-#include <stdio.h>
 #include "define_foreach.h"
 #include "envc.h"
+#include <stddef.h>
+#include <stdio.h>
 
 define_foreach(string, char *)
 
