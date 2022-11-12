@@ -9,7 +9,6 @@ void printintv(int *array, size_t len) {
         printf("}");
         return;
     }
-    for (int i = 0; i < len - 1; i++)
-        printf("%i, ", array[i]);
+    for (int i = 0; i < len - 1; i++) printf("%i, ", array[i]);
     printf("%i}", array[len - 1]);
 }
