@@ -12,18 +12,20 @@ struct MyStruct
 };
 
 // Allocates 3*char
-struct MyStruct mk_my_struct()
+struct MyStruct
+mk_my_struct ()
 {
-    char *proto[2 + 1] = {"3", "4", NULL};
-    char **my_string_array = malloc((2 + 1) * sizeof(char *));
-    memcpy(my_string_array, proto, sizeof(proto));
-    struct MyStruct my_struct = {1, "2", my_string_array};
+    char *proto[2 + 1] = { "3", "4", NULL };
+    char **my_string_array = malloc ((2 + 1) * sizeof (char *));
+    memcpy (my_string_array, proto, sizeof (proto));
+    struct MyStruct my_struct = { 1, "2", my_string_array };
     return my_struct;
 }
 
-int main()
+int
+main ()
 {
-    struct MyStruct my_struct = mk_my_struct();
-    printstrv(my_struct.my_string_array);
-    free(my_struct.my_string_array);
+    struct MyStruct my_struct = mk_my_struct ();
+    printstrv (my_struct.my_string_array);
+    free (my_struct.my_string_array);
 }
