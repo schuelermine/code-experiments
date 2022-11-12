@@ -1,9 +1,11 @@
 class Demonstration {
   public static void main(String[] args) {
-    if (args.length != 1) return;
+    if (args.length != 1)
+      return;
     String input = args[0];
     tryIt(input);
   }
+
   public static boolean tryIt(String input) {
     int value = switch (input) {
       case "Case 1" -> 1;
@@ -21,6 +23,7 @@ class Demonstration {
     System.out.println(value);
     return value % 2 == 0;
   }
+
   // This is equivalent to:
   public static boolean equiv(String input) {
     int value;
