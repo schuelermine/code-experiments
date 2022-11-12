@@ -7,7 +7,7 @@
 
 define_map(string, char*, string, char*, false)
 
-  char* chop_last_char_off_arg(char* string)
+    char* chop_last_char_off_arg(char* string)
 {
     if (string == NULL)
         return string;
@@ -24,8 +24,7 @@ define_map(string, char*, string, char*, false)
     return string2;
 }
 
-int
-main(int argc, char** argv)
+int main(int argc, char** argv)
 {
     argv = map_string_string(&chop_last_char_off_arg, argv, argc + 1);
     printstrv(argv);
