@@ -7,7 +7,8 @@
 #include "swap.h"
 
 void bubble_sort(int *array, size_t len) {
-    if (len == 0) return;
+    if (len == 0)
+        return;
     for (size_t j = len - 1; j >= 1; j--) {
         bool sorted = true;
         size_t i;
@@ -17,12 +18,14 @@ void bubble_sort(int *array, size_t len) {
                 sorted = false;
             }
         }
-        if (sorted) break;
+        if (sorted)
+            break;
     }
 }
 
 void insertion_sort(int *array, size_t len) {
-    if (len == 0) return;
+    if (len == 0)
+        return;
     int current_value_copy;
     size_t compare_index;
     for (size_t current_index = 1; current_index < len; current_index++) {
@@ -40,7 +43,8 @@ void insertion_sort(int *array, size_t len) {
 }
 
 void quick_sort(int *array, size_t len) {
-    if (len == 0) return;
+    if (len == 0)
+        return;
     int pivot_copy = array[len - 1];
     // partition array and calculate pivot_index
     size_t pivot_index = 0;

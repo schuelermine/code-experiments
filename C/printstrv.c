@@ -8,7 +8,8 @@ void printstrv(char **array) {
     while (*array != NULL) {
         printf("\"%s\"", *array);
         array++;
-        if (*array != NULL) printf(", ");
+        if (*array != NULL)
+            printf(", ");
     }
     printf("}");
 }
