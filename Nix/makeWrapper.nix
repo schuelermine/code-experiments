@@ -9,6 +9,6 @@ derivation {
 
   builder = fish;
   args = [ (builtins.toFile script) ];
-/* FUCKING HELL */
+  # FUCKING HELL
   inherit makeWrapperArgs;
 }
