@@ -1,9 +1,8 @@
+#include "define_map.h"
+#include "printstrv.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "define_map.h"
-#include "printstrv.h"
 
 define_map(string, char *, string, char *, false)
 

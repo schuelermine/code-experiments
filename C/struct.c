@@ -1,8 +1,7 @@
+#include "printstrv.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "printstrv.h"
 
 struct MyStruct {
     int my_integer;

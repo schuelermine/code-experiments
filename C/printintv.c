@@ -1,5 +1,4 @@
 #include "printintv.h"
-
 #include <stddef.h>
 #include <stdio.h>
 

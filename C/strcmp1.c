@@ -1,7 +1,6 @@
+#include "strcmp.h"
 #include <stdbool.h>
 #include <stdlib.h>
-
-#include "strcmp.h"
 
 int strcmp(const char *str1, const char *str2) {
     int diff;
