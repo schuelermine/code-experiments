@@ -1,8 +1,9 @@
-#include <stddef.h>
-#include <stdio.h>
 #include "printintv.h"
 
-void printintv(int* array, size_t len) {
+#include <stddef.h>
+#include <stdio.h>
+
+void printintv(int *array, size_t len) {
     printf("{");
     if (len == 0) {
         printf("}");

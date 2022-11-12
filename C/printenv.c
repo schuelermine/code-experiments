@@ -1,11 +1,12 @@
 #include <stddef.h>
 #include <stdio.h>
-#include "envc.h"
+
 #include "define_foreach.h"
+#include "envc.h"
 
 define_foreach(string, char *)
 
-void println(char *string) {
+    void println(char *string) {
     printf("%s\n", string);
 }
 
