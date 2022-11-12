@@ -3,10 +3,11 @@
 #include <stddef.h>
 #include <stdio.h>
 
-void printintv(int* array, size_t len)
+void printintv(int *array, size_t len)
 {
     printf("{");
-    if (len == 0) {
+    if (len == 0)
+    {
         printf("}");
         return;
     }
