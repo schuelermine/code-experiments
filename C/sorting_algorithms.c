@@ -6,7 +6,9 @@
 #include "printintv.h"
 #include "swap.h"
 
-void bubble_sort(int* array, size_t len) {
+void
+bubble_sort(int* array, size_t len)
+{
     if (len == 0)
         return;
     for (size_t j = len - 1; j >= 1; j--) {
@@ -23,7 +25,9 @@ void bubble_sort(int* array, size_t len) {
     }
 }
 
-void insertion_sort(int* array, size_t len) {
+void
+insertion_sort(int* array, size_t len)
+{
     if (len == 0)
         return;
     int current_value_copy;
@@ -42,7 +46,9 @@ void insertion_sort(int* array, size_t len) {
     }
 }
 
-void quick_sort(int* array, size_t len) {
+void
+quick_sort(int* array, size_t len)
+{
     if (len == 0)
         return;
     int pivot_copy = array[len - 1];
@@ -60,7 +66,9 @@ void quick_sort(int* array, size_t len) {
     quick_sort(array + pivot_index + 1, len - pivot_index - 1);
 }
 
-int* mk_random_array(int* len) {
+int*
+mk_random_array(int* len)
+{
     *len = rand() % 30;
     if (*len == 0) {
         return malloc(0);
@@ -76,7 +84,9 @@ int* mk_random_array(int* len) {
     return array;
 }
 
-bool is_sorted(int* array, size_t len) {
+bool
+is_sorted(int* array, size_t len)
+{
     bool sorted = true;
     for (size_t i = 1; i < len; i++) {
         if (array[i - 1] > array[i]) {
@@ -86,7 +96,9 @@ bool is_sorted(int* array, size_t len) {
     return sorted;
 }
 
-void _demonstrate_sort_in_place(void (*f)(int*, size_t), char* name) {
+void
+_demonstrate_sort_in_place(void (*f)(int*, size_t), char* name)
+{
     printf("Demonstrating %s\n", name);
     int len;
     int* array = mk_random_array(&len);
@@ -105,7 +117,9 @@ void _demonstrate_sort_in_place(void (*f)(int*, size_t), char* name) {
 
 #define demonstrate_sort_in_place(name) _demonstrate_sort_in_place(&name, #name)
 
-int main(int argc, char** argv) {
+int
+main(int argc, char** argv)
+{
     unsigned int seed;
     while (scanf("%u", &seed) <= 0) {
     };
