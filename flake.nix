@@ -7,6 +7,7 @@
           packages = with pkgs; [
             bash
             clang
+            gdb
             fish
             haskell.packages.ghc924.ghc
             openjdk

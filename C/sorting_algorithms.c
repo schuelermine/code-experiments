@@ -1,4 +1,5 @@
 #include "bubble_sort.h"
+#include "count_sort.h"
 #include "insertion_sort.h"
 #include "printintv.h"
 #include "quick_sort.h"
@@ -8,8 +9,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int *mk_random_array(int *len) {
-    *len = rand() % 30;
+const int random_value_spread = 100;
+const int random_value_min = -40;
+const int count_sort_min = random_value_min;
+const int count_sort_max = random_value_spread - 1 + random_value_spread;
+const int max_array_size = 30;
+
+void count_sort_(int *array, size_t len) {
+    count_sort(array, len, count_sort_min, count_sort_max);
+}
+
+int *mk_random_array(size_t *len) {
+    *len = rand() % max_array_size;
     if (*len == 0) {
         return malloc(0);
     }
@@ -18,8 +29,8 @@ int *mk_random_array(int *len) {
         perror("mk_random_array");
         exit(1);
     }
-    for (int i = 0; i < *len; i++) {
-        array[i] = rand() % 100 - 40;
+    for (size_t i = 0; i < *len; i++) {
+        array[i] = rand() % random_value_spread + random_value_min;
     }
     return array;
 }
@@ -34,9 +45,9 @@ bool is_sorted(int *array, size_t len) {
     return sorted;
 }
 
-void _demonstrate_sort_in_place(void (*f)(int *, size_t), char *name) {
+void _demonstrate_sort(void (*f)(int *, size_t), char *name) {
     printf("Demonstrating %s\n", name);
-    int len;
+    size_t len;
     int *array = mk_random_array(&len);
     printintv(array, len);
     printf("\n");
@@ -51,15 +62,16 @@ void _demonstrate_sort_in_place(void (*f)(int *, size_t), char *name) {
     free(array);
 }
 
-#define demonstrate_sort_in_place(name) _demonstrate_sort_in_place(&name, #name)
+#define demonstrate_sort(name) _demonstrate_sort(&name, #name)
 
 int main(int argc, char **argv) {
     unsigned int seed;
     while (scanf("%u", &seed) <= 0) {
     };
     srand(seed);
-    demonstrate_sort_in_place(bubble_sort);
-    demonstrate_sort_in_place(insertion_sort);
-    demonstrate_sort_in_place(quick_sort);
+    demonstrate_sort(bubble_sort);
+    demonstrate_sort(insertion_sort);
+    demonstrate_sort(quick_sort);
+    _demonstrate_sort(&count_sort_, "count_sort");
     return 0;
 }
