@@ -1,7 +1,7 @@
 #include "swap.h"
 
-inline void swap(int *array, int ix1, int ix2) {
-    int temp = array[ix1];
-    array[ix1] = array[ix2];
-    array[ix2] = temp;
+inline void swap(int *arr, int ix1, int ix2) {
+    int temp = arr[ix1];
+    arr[ix1] = arr[ix2];
+    arr[ix2] = temp;
 }

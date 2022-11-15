@@ -1,1 +1,1 @@
-extern void swap(int* array, int index1, int index2);
+extern void swap(int* arr, int ix1, int ix2);

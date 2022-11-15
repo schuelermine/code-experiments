@@ -1,3 +1,3 @@
 #include <stddef.h>
 
-extern void printintv(int* array, size_t len);
+extern void printintv(int* arr, size_t len);
