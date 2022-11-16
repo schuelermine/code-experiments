@@ -1,4 +1,4 @@
-from inspect import signature
+from inspect import signature, Parameter
 from functools import wraps
 
 
@@ -21,8 +21,8 @@ def mk_decorator(*args):
 
     @wraps(mk_decorator)
     def _mk_decorator(dec, key):
-        params = signature(dec).parameters
-        if params == 1:
+        params = signature(dec).parameters.values()
+        if len(params) == 1:
             return dec
         if isinstance(key, int):
 
@@ -31,9 +31,11 @@ def mk_decorator(*args):
                 args.insert(key, fun)
                 return args, kwargs
 
-            if key not in params:
+            if not len(params) >= key + 1 and not any(
+                param.kind == Parameter.VAR_POSITIONAL for param in params
+            ):
                 raise ValueError(
-                    f"Argument to mk_decorator() does not take argument number {key}"
+                    f"Argument to mk_decorator() does not take an argument {key}"
                 )
         elif isinstance(key, str):
 
@@ -41,7 +43,15 @@ def mk_decorator(*args):
                 kwargs[key] = fun
                 return args, kwargs
 
-            if key not in params:
+            if not any(
+                param.kind == Parameter.VAR_KEYWORD
+                or (
+                    param.kind
+                    in [Parameter.KEYWORD_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
+                    and param.name == key
+                )
+                for param in params
+            ):
                 raise ValueError(
                     f"Argument to mk_decorator() does not take argument {key}"
                 )
