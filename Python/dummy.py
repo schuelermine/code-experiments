@@ -21,5 +21,5 @@ class _dummy_dict(dict):
 
 
 class dummy(type):
-    def __prepare__(*_, **__) -> Mapping[str, object]:
+    def __prepare__(*_, **__):
         return _dummy_dict()

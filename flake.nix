@@ -17,6 +17,7 @@
             nodePackages.typescript
             nodejs
             python3
+            mypy
           ];
         };
       });
