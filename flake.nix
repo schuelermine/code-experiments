@@ -12,13 +12,11 @@
             haskell.packages.ghc924.ghc
             openjdk
             nix
-            nixfmt
             nushell
             powershell
             nodePackages.typescript
             nodejs
             python3
-            python3Packages.autopep8
           ];
         };
       });

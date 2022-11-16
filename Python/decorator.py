@@ -56,9 +56,7 @@ def decorator(*args):
                     f"Argument to decorator() does not take argument {key}"
                 )
         else:
-            raise TypeError(
-                "Argument to decorator() must be an instance of int or str"
-            )
+            raise TypeError("Argument to decorator() must be an instance of int or str")
 
         @wraps(dec)
         def new_dec_outer(*args, **kwargs):
@@ -77,9 +75,7 @@ def decorator(*args):
         return new_dec_outer
 
     if len(args) != 1:
-        raise TypeError(
-            f"decorator() takes exactly one argument ({len(args)} given)"
-        )
+        raise TypeError(f"decorator() takes exactly one argument ({len(args)} given)")
     x = args[0]
     if callable(x):
         return _decorator(x, 0)

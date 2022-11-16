@@ -56,7 +56,7 @@ for file in $files
     end
     if test "$dimensions[$dim]" -le $max -a "$dimensions[$dim]" -ge $min 2>/dev/null
         clear-msg
-        echo -- $file >> $outfile
+        echo -- $file >>$outfile
         out-msg (get-status Y -s "$file" \n | string collect -N)
     else
         if test "$status" = 2

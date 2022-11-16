@@ -5,9 +5,7 @@
 
 define_foreach(string, char *)
 
-    void println(char *string) {
-    printf("%s\n", string);
-}
+void println(char *string) { printf("%s\n", string); }
 
 int main(int argc, char **argv, char **envp) {
     foreach_string(&println, envp, envc(envp));

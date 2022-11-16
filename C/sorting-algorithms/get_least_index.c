@@ -1,5 +1,5 @@
-#include <stddef.h>
 #include "get_least_index.h"
+#include <stddef.h>
 
 inline size_t get_least_index(int *arr, size_t len) {
     size_t least_ix = 0;
