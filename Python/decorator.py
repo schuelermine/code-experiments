@@ -4,19 +4,19 @@ from functools import wraps
 
 def decorator(*args):
     """
-Transform a plain function that takes multiple parameters into a decorator in one of its parameters.
-Call as @decorator to take the value to be decorated as the first argument.
-Call as @decorator(key) to specify the positional or keyword argument that the function is passed to.
+    Transform a plain function that takes multiple parameters into a decorator in one of its parameters.
+    Call as @decorator to take the value to be decorated as the first argument.
+    Call as @decorator(key) to specify the positional or keyword argument that the function is passed to.
 
-Example:
-> @decorator('f')
-> def replace(x, *, f):
->     return x
->
-> @replace(None)
-> def foo(): pass
->
-> foo is None  # True
+    Example:
+    > @decorator('f')
+    > def replace(x, *, f):
+    >     return x
+    >
+    > @replace(None)
+    > def foo(): pass
+    >
+    > foo is None  # True
     """
 
     @wraps(decorator)
