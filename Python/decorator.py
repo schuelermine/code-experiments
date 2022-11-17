@@ -40,8 +40,16 @@ def _decorator(dec, key):
         return dec
     if isinstance(key, int):
 
-        if not len(params) >= key + 1 and not any(
-            param.kind == Parameter.VAR_POSITIONAL for param in params
+        if not (
+            len(
+                [
+                    1
+                    for param in params
+                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]
+                ]
+            )
+            > key
+            or any(param.kind == Parameter.VAR_POSITIONAL for param in params)
         ):
             raise ValueError(f"Argument to decorator() does not take an argument {key}")
 
