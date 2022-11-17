@@ -26,7 +26,7 @@ printenv: printenv.o envc.o
 
 .PHONY: clean
 clean: clean-sorting-algorithms
-	rm $(AALL)
+	rm -f $(AALL)
 	rm -f *.o
 
 .PHONY: clean-sorting-algorithms
