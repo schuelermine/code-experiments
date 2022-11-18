@@ -40,17 +40,9 @@ def _decorator(dec, key):
         return dec
     if isinstance(key, int):
 
-        if not (
-            len(
-                [
-                    1
-                    for param in params
-                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]
-                ]
-            )
-            > key
-            or any(param.kind == Parameter.VAR_POSITIONAL for param in params)
-        ):
+        if not (sum(1 for param in params
+                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]) > key
+                or any(param.kind is Parameter.VAR_POSITIONAL for param in params)):
             raise ValueError(f"Argument to decorator() does not take an argument {key}")
 
         def modify_args(args, kwargs, fun):
@@ -61,7 +53,7 @@ def _decorator(dec, key):
     elif isinstance(key, str):
 
         if not any(
-            param.kind == Parameter.VAR_KEYWORD
+            param.kind is Parameter.VAR_KEYWORD
             or (
                 param.kind in [Parameter.KEYWORD_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
                 and param.name == key

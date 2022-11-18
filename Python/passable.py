@@ -1,19 +1,17 @@
 from inspect import signature, Parameter
-from typing import Callable
+from typing import Any, Callable
 
 
-def arg_passable(fun: Callable, arg_ix: int) -> bool:
+def arg_passable(fun: Callable[..., Any], arg_ix: int) -> bool:
     params = signature(fun).parameters.values()
-    return len(
-        [
-            1
-            for param in params
-            if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]
-        ]
+    return sum(
+        1
+        for param in params
+        if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]
     ) > arg_ix or any(param.kind == Parameter.VAR_POSITIONAL for param in params)
 
 
-def kwarg_passable(fun: Callable, arg_key: str) -> bool:
+def kwarg_passable(fun: Callable[..., Any], arg_key: str) -> bool:
     params = signature(fun).parameters.values()
     return any(
         param.kind is Parameter.VAR_KEYWORD

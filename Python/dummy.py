@@ -8,7 +8,7 @@ class DummyCall:
     kwargs: dict[str, Any]
 
 
-def _dummy_function(*args: Any, **kwargs) -> DummyCall:
+def _dummy_function(*args: Any, **kwargs: Any) -> DummyCall:
     return DummyCall(args, kwargs)
 
 
