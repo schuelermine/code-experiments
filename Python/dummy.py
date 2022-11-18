@@ -12,7 +12,7 @@ def _dummy_function(*args: Any, **kwargs: Any) -> DummyCall:
     return DummyCall(args, kwargs)
 
 
-class _dummy_dict(dict):
+class _dummy_dict(dict[str, Any]):
     def __setitem__(self, key: str, value: Any) -> None:
         if callable(value):
             super().__setitem__(key, _dummy_function)
@@ -21,5 +21,6 @@ class _dummy_dict(dict):
 
 
 class dummy(type):
-    def __prepare__(*_, **__):
+    @classmethod
+    def __prepare__(metacls: Any, __name: str, __bases: tuple[type, ...], **kwds: Any) -> Mapping[str, object]:
         return _dummy_dict()
