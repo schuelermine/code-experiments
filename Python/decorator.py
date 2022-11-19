@@ -2,19 +2,27 @@ from inspect import signature, Parameter
 from functools import wraps, update_wrapper
 from typing import overload, Callable, Concatenate, Literal, TypeVar, Any
 
-T = TypeVar('T')
-D = TypeVar('D')
+T = TypeVar("T")
+D = TypeVar("D")
 
 
 @overload
-def decorator(x: str | int) -> Callable[[Callable[..., T]], Callable[..., Callable[[D], T]]]: pass
+def decorator(
+    x: str | int,
+) -> Callable[[Callable[..., T]], Callable[..., Callable[[D], T]]]:
+    pass
 
 
 @overload
-def decorator(x: Callable[[D], T]) -> Callable[[D], T]: pass
+def decorator(x: Callable[[D], T]) -> Callable[[D], T]:
+    pass
 
 
-def decorator(x: str | int | Callable[[D], T]) -> Callable[[D], T] | Callable[[Callable[..., T]], Callable[[D], T] | Callable[..., Callable[[D], T]]]:
+def decorator(
+    x: str | int | Callable[[D], T]
+) -> Callable[[D], T] | Callable[
+    [Callable[..., T]], Callable[[D], T] | Callable[..., Callable[[D], T]]
+]:
     """
     Transform a plain function that takes multiple parameters into a decorator in one of its parameters.
     Call as @decorator to take the value to be decorated as the first argument.
@@ -38,14 +46,18 @@ def decorator(x: str | int | Callable[[D], T]) -> Callable[[D], T] | Callable[[C
         y: str | int = x
 
         @wraps(decorator)
-        def decorator_(f: Callable[..., T]) -> Callable[[D], T] | Callable[..., Callable[[Any], T]]:
+        def decorator_(
+            f: Callable[..., T]
+        ) -> Callable[[D], T] | Callable[..., Callable[[Any], T]]:
             return _decorator(f, y)
 
         return decorator_
 
 
 @wraps(decorator)
-def _decorator(dec: Callable[..., T], key: str | int) -> Callable[[D], T] | Callable[..., Callable[[D], T]]:
+def _decorator(
+    dec: Callable[..., T], key: str | int
+) -> Callable[[D], T] | Callable[..., Callable[[D], T]]:
     params = signature(dec).parameters.values()
     if len(params) == 1:
         return dec
@@ -64,7 +76,9 @@ def _decorator(dec: Callable[..., T], key: str | int) -> Callable[[D], T] | Call
 
         i_key: int = key
 
-        def modify_args(args: tuple[Any, ...], kwargs: dict[str, Any], val: D) -> tuple[tuple[Any, ...], dict[str, Any]]:
+        def modify_args(
+            args: tuple[Any, ...], kwargs: dict[str, Any], val: D
+        ) -> tuple[tuple[Any, ...], dict[str, Any]]:
             args_ = list(args)
             args_.insert(i_key, val)
             return tuple(args_), kwargs
@@ -83,7 +97,9 @@ def _decorator(dec: Callable[..., T], key: str | int) -> Callable[[D], T] | Call
 
         s_key: str = key
 
-        def modify_args(args: tuple[Any, ...], kwargs: dict[str, Any], val: D) -> tuple[tuple[Any, ...], dict[str, Any]]:
+        def modify_args(
+            args: tuple[Any, ...], kwargs: dict[str, Any], val: D
+        ) -> tuple[tuple[Any, ...], dict[str, Any]]:
             kwargs[s_key] = val
             return args, kwargs
 
@@ -105,5 +121,3 @@ def _decorator(dec: Callable[..., T], key: str | int) -> Callable[[D], T] | Call
         return new_dec_inner
 
     return new_dec_outer
-
-
