@@ -1,9 +1,9 @@
 from inspect import signature, Parameter
-from typing import Any, Callable
+from typing import Any, Callable, ValuesView
 
 
 def arg_passable(fun: Callable[..., Any], arg_ix: int) -> bool:
-    params = signature(fun).parameters.values()
+    params: ValuesView[Parameter] = signature(fun).parameters.values()
     return sum(
         1
         for param in params
@@ -12,7 +12,7 @@ def arg_passable(fun: Callable[..., Any], arg_ix: int) -> bool:
 
 
 def kwarg_passable(fun: Callable[..., Any], arg_key: str) -> bool:
-    params = signature(fun).parameters.values()
+    params: ValuesView[Parameter] = signature(fun).parameters.values()
     return any(
         param.kind is Parameter.VAR_KEYWORD
         or (
