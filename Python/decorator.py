@@ -1,6 +1,6 @@
 from inspect import signature, Parameter
 from functools import wraps, update_wrapper
-from typing import overload, Callable, Concatenate, Literal, TypeVar, Any
+from typing import overload, Callable, Concatenate, Literal, TypeVar
 
 T = TypeVar("T")
 D = TypeVar("D")
@@ -24,9 +24,10 @@ def decorator(
     [Callable[..., T]], Callable[[D], T] | Callable[..., Callable[[D], T]]
 ]:
     """
-    Transform a plain function that takes multiple parameters into a decorator in one of its parameters.
+    Transform a plain function that takes multiple parameters into a parametrized decorator in one of its parameters.
     Call as @decorator to take the value to be decorated as the first argument.
     Call as @decorator(key) to specify the positional or keyword argument that the function is passed to.
+    If the resultant function would have no arguments, this step is elided.
 
     Example:
     > @decorator('f')
@@ -37,7 +38,87 @@ def decorator(
     > def foo(): pass
     >
     > foo is None  # True
+
+    > @decorator
+    > def foo(f):
+    >     return "foo"
+    >
+    > @foo
+    > def bar(): pass
+    >
+    > bar == "foo"  # True
     """
+
+    def _decorator(
+        dec: Callable[..., T], key: str | int
+    ) -> Callable[[D], T] | Callable[..., Callable[[D], T]]:
+        params = signature(dec).parameters.values()
+        if len(params) == 1:
+            return dec
+        if isinstance(key, int):
+
+            if not (
+                sum(
+                    1
+                    for param in params
+                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]
+                )
+                > key
+                or any(param.kind is Parameter.VAR_POSITIONAL for param in params)
+            ):
+                raise ValueError(
+                    f"Argument to decorator() does not take an argument {key}"
+                )
+
+            i_key: int = key
+
+            def modify_args(
+                args: tuple[object, ...], kwargs: dict[str, object], val: D
+            ) -> tuple[tuple[object, ...], dict[str, object]]:
+                args_ = list(args)
+                args_.insert(i_key, val)
+                return tuple(args_), kwargs
+
+        elif isinstance(key, str):
+
+            if not any(
+                param.kind is Parameter.VAR_KEYWORD
+                or (
+                    param.kind
+                    in [Parameter.KEYWORD_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
+                    and param.name == key
+                )
+                for param in params
+            ):
+                raise ValueError(
+                    f"Argument to decorator() does not take argument {key}"
+                )
+
+            s_key: str = key
+
+            def modify_args(
+                args: tuple[object, ...], kwargs: dict[str, object], val: D
+            ) -> tuple[tuple[object, ...], dict[str, object]]:
+                kwargs[s_key] = val
+                return args, kwargs
+
+        else:
+            raise TypeError("Argument to decorator() must be an instance of int or str")
+
+        @wraps(dec)
+        def new_dec_outer(*args: object, **kwargs: object) -> Callable[[D], T]:
+            def new_dec_inner(val: D) -> T:
+                args_, kwargs_ = modify_args(args, kwargs, val)
+                new_fun = dec(*args_, **kwargs_)
+                try:
+                    new_fun = update_wrapper(new_fun, val)  # type: ignore
+                except AttributeError:
+                    pass
+                return new_fun
+
+            return new_dec_inner
+
+        return new_dec_outer
 
     if callable(x):
         return _decorator(x, 0)
@@ -48,76 +129,7 @@ def decorator(
         @wraps(decorator)
         def decorator_(
             f: Callable[..., T]
-        ) -> Callable[[D], T] | Callable[..., Callable[[Any], T]]:
+        ) -> Callable[[D], T] | Callable[..., Callable[[D], T]]:
             return _decorator(f, y)
 
         return decorator_
-
-
-@wraps(decorator)
-def _decorator(
-    dec: Callable[..., T], key: str | int
-) -> Callable[[D], T] | Callable[..., Callable[[D], T]]:
-    params = signature(dec).parameters.values()
-    if len(params) == 1:
-        return dec
-    if isinstance(key, int):
-
-        if not (
-            sum(
-                1
-                for param in params
-                if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.KEYWORD_ONLY]
-            )
-            > key
-            or any(param.kind is Parameter.VAR_POSITIONAL for param in params)
-        ):
-            raise ValueError(f"Argument to decorator() does not take an argument {key}")
-
-        i_key: int = key
-
-        def modify_args(
-            args: tuple[Any, ...], kwargs: dict[str, Any], val: D
-        ) -> tuple[tuple[Any, ...], dict[str, Any]]:
-            args_ = list(args)
-            args_.insert(i_key, val)
-            return tuple(args_), kwargs
-
-    elif isinstance(key, str):
-
-        if not any(
-            param.kind is Parameter.VAR_KEYWORD
-            or (
-                param.kind in [Parameter.KEYWORD_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
-                and param.name == key
-            )
-            for param in params
-        ):
-            raise ValueError(f"Argument to decorator() does not take argument {key}")
-
-        s_key: str = key
-
-        def modify_args(
-            args: tuple[Any, ...], kwargs: dict[str, Any], val: D
-        ) -> tuple[tuple[Any, ...], dict[str, Any]]:
-            kwargs[s_key] = val
-            return args, kwargs
-
-    else:
-        raise TypeError("Argument to decorator() must be an instance of int or str")
-
-    @wraps(dec)
-    def new_dec_outer(*args: Any, **kwargs: Any) -> Callable[[Any], T]:
-        @wraps(dec)
-        def new_dec_inner(val: D) -> T:
-            args_, kwargs_ = modify_args(args, kwargs, val)
-            new_fun = dec(*args_, **kwargs_)
-            try:
-                new_fun = update_wrapper(new_fun, val)  # type: ignore
-            except AttributeError:
-                pass
-            return new_fun
-
-        return new_dec_inner
-
-    return new_dec_outer
