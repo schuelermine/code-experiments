@@ -7,7 +7,7 @@ def arg_passable(fun: Callable[..., Any], arg_ix: int) -> bool:
     return sum(
         1
         for param in params
-        if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_ONLY]
+        if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
     ) > arg_ix or any(param.kind == Parameter.VAR_POSITIONAL for param in params)
 
 
