@@ -61,7 +61,7 @@ def decorator(
                 sum(
                     1
                     for param in params
-                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_ONLY]
+                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
                 )
                 > key
                 or any(param.kind is Parameter.VAR_POSITIONAL for param in params)
