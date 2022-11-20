@@ -61,7 +61,8 @@ def decorator(
                 sum(
                     1
                     for param in params
-                    if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
+                    if param.kind
+                    in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
                 )
                 > key
                 or any(param.kind is Parameter.VAR_POSITIONAL for param in params)
@@ -103,7 +104,7 @@ def decorator(
                 return args, kwargs
 
         else:
-            raise TypeError("Argument to decorator() must be an instance of int or str")
+            raise TypeError("Argument to decorator() must be int or str or callable")
 
         @wraps(dec)
         def new_dec_outer(*args: object, **kwargs: object) -> Callable[[D], T]:
