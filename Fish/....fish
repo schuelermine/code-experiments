@@ -6,6 +6,7 @@ function ...
             set c $argv[1]
         case "*"
             echo "... takes up to one argument, but $(count $argv) were given" >&2
+            return 1
     end
     set dest $PWD
     for i in (seq $c)
