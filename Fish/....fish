@@ -1,5 +1,5 @@
 function ...
-    switch (count argv)
+    switch (count $argv)
         case 0
             set c 2
         case 1
