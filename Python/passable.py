@@ -21,7 +21,7 @@ def kwarg_passable(fun: Callable[..., Any], arg_key: str) -> bool:
         param.kind is Parameter.VAR_KEYWORD
         or (
             param.kind in [Parameter.KEYWORD_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
-            and param.name is arg_key
+            and param.name == arg_key
         )
         for param in params
     )
@@ -35,4 +35,4 @@ def arg_passable(fun: Callable[..., Any], arg_ix: int) -> bool:
         1
         for param in params
         if param.kind in [Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_OR_KEYWORD]
-    ) > arg_ix or any(param.kind == Parameter.VAR_POSITIONAL for param in params)
+    ) > arg_ix or any(param.kind is Parameter.VAR_POSITIONAL for param in params)
