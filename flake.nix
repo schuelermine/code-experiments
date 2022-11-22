@@ -19,6 +19,10 @@
             python3
             python3Packages.hypothesis
             mypy
+            black
+            nixfmt
+            clang-tools
+            ormolu
           ];
         };
       });
