@@ -1,6 +1,7 @@
 #include "bubble_sort.h"
 #include "count_sort.h"
 #include "insertion_sort.h"
+#include "merge_sort.h"
 #include "printintv.h"
 #include "quick_sort.h"
 #include "selection_sort.h"
@@ -74,5 +75,6 @@ int main(int argc, char **argv) {
     demonstrate_sort(quick_sort);
     _demonstrate_sort(&count_sort_, "count_sort");
     demonstrate_sort(selection_sort);
+    demonstrate_sort(merge_sort);
     return 0;
 }

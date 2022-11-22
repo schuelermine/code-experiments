@@ -13,7 +13,7 @@ all: $(ALL)
 
 demonstrate_sorts: demonstrate_sorts.o bubble_sort.o\
 count_sort.o insertion_sort.o quick_sort.o selection_sort.o\
-get_least_index.o swap.o printintv.o
+merge_sort.o get_least_index.o swap.o printintv.o
 	$(CC) $(CPPFLAGS) $^ $(CFLAGS) -o $@
 
 %.o: %.c
