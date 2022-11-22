@@ -17,12 +17,9 @@
             nodePackages.typescript
             nodejs
             python3
+            python3Packages.hypothesis
             mypy
-          ] ++ (with pkgs.python3Packages; [
-            hypothesis
-            click
-            libcst
-          ]);
+          ];
         };
       });
 }
