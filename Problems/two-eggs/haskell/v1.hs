@@ -149,6 +149,7 @@ minBy f x y = case compare (f x) (f y) of
   EQ -> x
   GT -> y
 
+minX :: Ord p => p -> p -> p -> p
 minX a b c = case compare a c of
   LT -> b
   EQ -> b
