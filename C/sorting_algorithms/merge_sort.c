@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void _merge(int *src,int *dest, size_t len, size_t mid) {
+void _merge(int *src, int *dest, size_t len, size_t mid) {
     size_t ix_l = 0;
     size_t ix_r = mid;
     for (size_t ix = 0; ix < len; ix++) {
@@ -30,4 +30,5 @@ void merge_sort(int *arr, size_t len) {
     int *arr2 = malloc(len * sizeof(int));
     memcpy(arr2, arr, len * sizeof(int));
     _merge_sort(arr, arr2, len);
+    free(arr2);
 }
