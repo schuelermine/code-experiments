@@ -1,5 +1,5 @@
 from types import NoneType
-from typing import Any, Callable, Iterable, TypeVar
+from typing import Callable, Iterable, TypeVar
 
 T = TypeVar("T")
 
@@ -25,5 +25,5 @@ def count3(iterable: Iterable[T], condition: None | Callable[[T], bool] = None) 
     return sum(condition(value) for value in iterable)
 
 
-def count4(iterable: Iterable[Any]) -> int:
+def count4(iterable: Iterable[object]) -> int:
     return len(list(iterable))

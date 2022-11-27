@@ -3,5 +3,6 @@
         "stdbool.h": "c",
         "stdio.h": "c"
     },
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/C/.vscode/compile_commands.json"
 }

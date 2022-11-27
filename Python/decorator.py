@@ -10,12 +10,12 @@ D = TypeVar("D")
 def decorator(
     x: str | int,
 ) -> Callable[[Callable[..., T]], Callable[..., Callable[[D], T]]]:
-    pass
+    pass  # overload
 
 
 @overload
 def decorator(x: Callable[[D], T]) -> Callable[[D], T]:
-    pass
+    pass  # overload
 
 
 def decorator(

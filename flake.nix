@@ -18,6 +18,7 @@
             nodejs
             python3
             python3Packages.hypothesis
+            python3Packages.pytest
             mypy
             black
             nixfmt

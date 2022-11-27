@@ -1,0 +1,72 @@
+[
+    {
+        "command": "clang  -c demonstrate_sorts.c -std=c11 -O2 -Wall -Wpedantic  -o demonstrate_sorts.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/demonstrate_sorts.c"
+    },
+    {
+        "command": "clang  -c bubble_sort.c -std=c11 -O2 -Wall -Wpedantic  -o bubble_sort.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/bubble_sort.c"
+    },
+    {
+        "command": "clang  -c count_sort.c -std=c11 -O2 -Wall -Wpedantic  -o count_sort.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/count_sort.c"
+    },
+    {
+        "command": "clang  -c insertion_sort.c -std=c11 -O2 -Wall -Wpedantic  -o insertion_sort.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/insertion_sort.c"
+    },
+    {
+        "command": "clang  -c quick_sort.c -std=c11 -O2 -Wall -Wpedantic  -o quick_sort.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/quick_sort.c"
+    },
+    {
+        "command": "clang  -c selection_sort.c -std=c11 -O2 -Wall -Wpedantic  -o selection_sort.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/selection_sort.c"
+    },
+    {
+        "command": "clang  -c merge_sort.c -std=c11 -O2 -Wall -Wpedantic  -o merge_sort.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/merge_sort.c"
+    },
+    {
+        "command": "clang  -c get_least_index.c -std=c11 -O2 -Wall -Wpedantic  -o get_least_index.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/get_least_index.c"
+    },
+    {
+        "command": "clang  -c swap.c -std=c11 -O2 -Wall -Wpedantic  -o swap.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/swap.c"
+    },
+    {
+        "command": "clang  -c printintv.c -std=c11 -O2 -Wall -Wpedantic  -o printintv.o",
+        "directory": "/media/external-data/Code/code-experiments/C/sorting_algorithms",
+        "file": "/media/external-data/Code/code-experiments/C/sorting_algorithms/printintv.c"
+    },
+    {
+        "command": "clang  -c chop-args.c -std=c11 -O2 -Wall -Wpedantic  -o chop-args.o",
+        "directory": "/media/external-data/Code/code-experiments/C",
+        "file": "/media/external-data/Code/code-experiments/C/chop-args.c"
+    },
+    {
+        "command": "clang  -c printstrv.c -std=c11 -O2 -Wall -Wpedantic  -o printstrv.o",
+        "directory": "/media/external-data/Code/code-experiments/C",
+        "file": "/media/external-data/Code/code-experiments/C/printstrv.c"
+    },
+    {
+        "command": "clang  -c printenv.c -std=c11 -O2 -Wall -Wpedantic  -o printenv.o",
+        "directory": "/media/external-data/Code/code-experiments/C",
+        "file": "/media/external-data/Code/code-experiments/C/printenv.c"
+    },
+    {
+        "command": "clang  -c envc.c -std=c11 -O2 -Wall -Wpedantic  -o envc.o",
+        "directory": "/media/external-data/Code/code-experiments/C",
+        "file": "/media/external-data/Code/code-experiments/C/envc.c"
+    }
+]

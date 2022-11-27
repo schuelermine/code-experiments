@@ -1,4 +1,8 @@
-[
+from typing import TypeAlias
+
+rec_dict_type: TypeAlias = dict[int, 'rec_dict_type']
+
+big_dictionaries: list[rec_dict_type] = [
     {
         15838: {-23077: {}, 21356: {}},
         -7419: {},

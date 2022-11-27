@@ -10,16 +10,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// to allow overriding via flags
+#define MAX_ARRAY_SIZE 100
+
 const int random_value_spread = 100;
 const int random_value_min = -40;
 const int count_sort_min = random_value_min;
 const int count_sort_max = random_value_spread - 1 + random_value_spread;
-const int max_array_size = 30;
+const int max_array_size = MAX_ARRAY_SIZE;
 
+// helper function to fit to _demonstrate_sort signature
 void count_sort_(int *array, size_t len) {
     count_sort(array, len, count_sort_min, count_sort_max);
 }
 
+// requires srand() called beforehand
+// not securely random
 int *mk_random_array(size_t *len) {
     *len = rand() % max_array_size;
     if (*len == 0) {
@@ -31,7 +37,7 @@ int *mk_random_array(size_t *len) {
         exit(1);
     }
     for (size_t i = 0; i < *len; i++) {
-        array[i] = rand() % random_value_spread + random_value_min;
+        array[i] = rand() % (random_value_spread + 1) + random_value_min;
     }
     return array;
 }

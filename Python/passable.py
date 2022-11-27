@@ -1,8 +1,8 @@
 from inspect import signature, Parameter
-from typing import Any, Callable, ValuesView
+from typing import Callable, ValuesView
 
 
-def passable(fun: Callable[..., Any], arg: str | int) -> bool:
+def passable(fun: Callable[..., object], arg: str | int) -> bool:
     if not callable(fun):
         raise TypeError("Argument fun to passable() must be callable")
     if isinstance(arg, str):
@@ -13,7 +13,7 @@ def passable(fun: Callable[..., Any], arg: str | int) -> bool:
         raise TypeError("Argument arg to passable() must be int or str")
 
 
-def kwarg_passable(fun: Callable[..., Any], arg_key: str) -> bool:
+def kwarg_passable(fun: Callable[..., object], arg_key: str) -> bool:
     assert callable(fun)
     assert isinstance(arg_key, str)
     params: ValuesView[Parameter] = signature(fun).parameters.values()
@@ -27,7 +27,7 @@ def kwarg_passable(fun: Callable[..., Any], arg_key: str) -> bool:
     )
 
 
-def arg_passable(fun: Callable[..., Any], arg_ix: int) -> bool:
+def arg_passable(fun: Callable[..., object], arg_ix: int) -> bool:
     assert callable(fun)
     assert isinstance(arg_ix, int)
     params: ValuesView[Parameter] = signature(fun).parameters.values()

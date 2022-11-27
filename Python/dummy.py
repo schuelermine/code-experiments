@@ -1,19 +1,19 @@
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Mapping
 
 
 @dataclass
 class DummyCall:
-    args: tuple[Any, ...]
-    kwargs: dict[str, Any]
+    args: tuple[object, ...]
+    kwargs: dict[str, object]
 
 
-def _dummy_function(*args: Any, **kwargs: Any) -> DummyCall:
+def _dummy_function(*args: object, **kwargs: object) -> DummyCall:
     return DummyCall(args, kwargs)
 
 
-class _dummy_dict(dict[str, Any]):
-    def __setitem__(self, key: str, value: Any) -> None:
+class _dummy_dict(dict[str, object]):
+    def __setitem__(self, key: str, value: object) -> None:
         if callable(value):
             super().__setitem__(key, _dummy_function)
         else:
@@ -23,6 +23,6 @@ class _dummy_dict(dict[str, Any]):
 class dummy(type):
     @classmethod
     def __prepare__(
-        metacls: Any, __name: str, __bases: tuple[type, ...], **kwds: Any
+        metacls: object, __name: str, __bases: tuple[type, ...], **kwds: object
     ) -> Mapping[str, object]:
         return _dummy_dict()
