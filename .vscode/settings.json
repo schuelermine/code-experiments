@@ -4,5 +4,10 @@
         "stdio.h": "c"
     },
     "python.formatting.provider": "black",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/C/.vscode/compile_commands.json"
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/C/.vscode/compile_commands.json",
+    "python.testing.pytestArgs": [
+        "Python"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

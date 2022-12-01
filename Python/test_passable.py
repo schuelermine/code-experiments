@@ -12,9 +12,10 @@ from hypothesis.strategies import (
     lists,
     none,
     data,
-    DataObject
+    DataObject,
 )
-from typing import Optional, TypeVar, Generic
+from typing import Optional, TypeVar, Generic, TypeAlias
+from dataclasses import dataclass
 from inspect import Parameter, _ParameterKind, Signature
 from unicodedata import normalize
 from keyword import iskeyword
@@ -54,6 +55,7 @@ def identifiers(draw: DrawFn, max_length: Optional[int] = None) -> str:
             )
         )
     assume(not iskeyword(string))
+    assume(string.isidentifier())
     return string
 
 
@@ -78,9 +80,17 @@ def parameters(
         kind = draw(parameter_kinds)
     assert kind is not None
     assert (not have_default) or default is not None
-    if have_default and draw(booleans()) and kind not in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]:
-        assert default is not None  # Satisfies the type checker. This assert should never fail.
-        return Parameter(draw(identifiers(max_length=max_length)), kind, default=draw(default))
+    if (
+        have_default
+        and draw(booleans())
+        and kind not in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]
+    ):
+        assert (
+            default is not None
+        )  # Satisfies the type checker. This assert should never fail.
+        return Parameter(
+            draw(identifiers(max_length=max_length)), kind, default=draw(default)
+        )
     else:
         return Parameter(draw(identifiers(max_length=max_length)), kind)
 
@@ -94,96 +104,85 @@ parameter_kinds: SearchStrategy[_ParameterKind] = one_of(
 )
 
 
-T = TypeVar('T')
+def prepare_paramkinds(kinds: list[_ParameterKind]) -> list[_ParameterKind]:
+    kinds.sort()
+    seen_var_positional = False
+    seen_var_keyword = False
+    indices_to_delete = []
+    for i, kind in enumerate(kinds):
+        if kind is Parameter.VAR_POSITIONAL:
+            if seen_var_positional:
+                indices_to_delete.append(i)
+            else:
+                seen_var_positional = True
+        elif kind is Parameter.VAR_KEYWORD:
+            if seen_var_keyword:
+                indices_to_delete.append(i)
+            else:
+                seen_var_keyword = True
+    return [kind for i, kind in enumerate(kinds) if i not in indices_to_delete]
 
 
-class ParamProto(Generic[T]):
-    def __init__(self) -> None:
-        self.has_kind = False
-        self.kind = None
-        self.has_name = False
-        self.name = None
-        self.has_default = False
-        self.default = None
-
-    def set_kind(self, kind: _ParameterKind) -> None:
-        self.has_kind = True
-        self.kind = kind
-
-    def set_name(self, name: str) -> None:
-        self.has_name = True
-        self.name = name
-    
-    def set_default(self, default: T) -> None:
-        if self.kind in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]:
-            return
-        self.has_default = True
-        self.default = default
-    
-    def unset_default(self) -> None:
-        self.has_default = False
-        self.default = None
-
-    @property
-    def is_complete(self) -> bool:
-        return self.has_kind and self.has_name
-    
-    @property
-    def is_consistent(self) -> bool:
-        return (self.kind is None or self.has_kind) and (self.name is None or self.has_name) and (self.name is None or self.has_default)
-    
-    def reify(self) -> Parameter:
-        assert self.is_consistent
-        assert self.is_complete
-        assert self.kind is not None
-        assert self.name is not None
-        if self.has_default:
-            return Parameter(self.name, self.kind, default=self.default)
-        else:
-            return Parameter(self.name, self.kind)
-
-    has_kind: bool
-    kind: Optional[_ParameterKind]
-    has_name: bool
-    name: Optional[str]
-    has_default: bool
-    default: Optional[T]
+sentinel = object()
 
 
 @composite
-def signatures(draw: DrawFn, default: SearchStrategy[T], *, max_params: Optional[int] = None, max_identifier_length: Optional[int] = None) -> Signature:
-    param_count = draw(integers(min_value=0, max_value=None))
-    if param_count == 0:
-        return Signature()
-    params: list[ParamProto[T]] = [ParamProto() for _ in range(param_count)]
-    current_count: int = 0
-    def fill_kind(kind: _ParameterKind, max_count: int, min_count: int = 0) -> None:
-        nonlocal current_count, params
-        count = draw(integers(min_value=0, max_value=max_count))
-        for i in range(count):
-            params[current_count + i].set_kind(kind)
-        current_count += count
-    fill_kind(Parameter.POSITIONAL_ONLY, param_count - current_count)
-    fill_kind(Parameter.POSITIONAL_OR_KEYWORD, param_count - current_count)
-    fill_kind(Parameter.VAR_POSITIONAL, 1)
-    fill_kind(Parameter.KEYWORD_ONLY, param_count - current_count, max(0, param_count - current_count - 1))
-    if current_count != param_count:
-        fill_kind(Parameter.VAR_KEYWORD, 1)
-    current_count = draw(integers(min_value=0, max_value=param_count))
-    for i in range(param_count - current_count):
-        params[current_count + i].set_default(draw(default))
-    return Signature([param.reify() for param in params])
-    
+def signatures(
+    draw: DrawFn,
+    /,
+    defaults: SearchStrategy[object],
+    *,
+    max_param_count: Optional[int] = None,
+    max_identifier_length: Optional[int] = None,
+) -> Signature:
+    param_kinds = draw(
+        lists(parameter_kinds, max_size=max_param_count).map(prepare_paramkinds)
+    )
+    param_count = len(param_kinds)
+    param_defaults = draw(
+        lists(
+            one_of(just(sentinel), defaults),
+            min_size=param_count,
+            max_size=param_count,
+        ).map(lambda x: sorted(x, key=lambda y: 0 if y is sentinel else 1))
+    )
+    param_names = draw(
+        lists(
+            identifiers(max_length=max_identifier_length),
+            min_size=param_count,
+            max_size=param_count,
+            unique=True,
+        )
+    )
+    return Signature(
+        [
+            Parameter(
+                name,
+                kind,
+                default=default,
+            )
+            if kind not in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]
+            and default is not sentinel
+            else Parameter(name, kind)
+            for name, kind, default in zip(param_names, param_kinds, param_defaults)
+        ]
+    )
+
 
 class DummyFunction:
     def __init__(self, sig: Signature) -> None:
         self.__signature__ = sig
+
     def __call__(self, *args: object, **kwargs: object) -> None:
         self.__signature__.bind(*args, **kwargs)
+
     __signature__: Signature
 
 
-@given(signatures(default=none(), max_identifier_length=3), one_of(identifiers(), integers()))
+@given(
+    signatures(defaults=one_of(none(), integers()), max_identifier_length=3, max_param_count=20),
+    one_of(identifiers(max_length=3), integers(min_value=0)),
+)
 def test_passable(sig: Signature, key: str | int) -> None:
     dummy = DummyFunction(sig)
 
@@ -197,7 +196,7 @@ def test_passable(sig: Signature, key: str | int) -> None:
     else:
         args = [None] * (key + 1)
         kwargs = {}
-    
+
     if not passable(dummy, key):
         with raises(TypeError):
             dummy(*args, **kwargs)
