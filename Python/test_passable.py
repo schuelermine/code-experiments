@@ -1,3 +1,4 @@
+from __future__ import annotations
 from passable import passable
 from hypothesis import assume, given
 from hypothesis.strategies import (
@@ -6,18 +7,13 @@ from hypothesis.strategies import (
     integers,
     characters,
     SearchStrategy,
-    booleans,
     one_of,
     just,
     lists,
     none,
-    data,
-    DataObject,
 )
-from typing import Optional, TypeVar, Generic, TypeAlias
-from dataclasses import dataclass
+from typing import Optional
 from inspect import Parameter, _ParameterKind, Signature
-from unicodedata import normalize
 from keyword import iskeyword
 from pytest import raises
 
@@ -41,7 +37,7 @@ id_continue_extras = (
 def identifiers(
     draw: DrawFn, max_length: Optional[int] = None, min_length: int = 1
 ) -> str:
-    assert min_length < max_length if max_length is not None else True
+    assert min_length <= max_length if max_length is not None else True
     assert min_length >= 1
     length = draw(integers(min_value=min_length, max_value=max_length))
     string = ""
@@ -113,10 +109,10 @@ def signatures(
     max_identifier_length: Optional[int] = None,
     min_identifier_length: int = 1,
 ) -> Signature:
-    assert min_param_count < max_param_count if max_param_count is not None else True
+    assert min_param_count <= max_param_count if max_param_count is not None else True
     assert min_param_count >= 0
     assert (
-        min_identifier_length < max_identifier_length
+        min_identifier_length <= max_identifier_length
         if max_identifier_length is not None
         else True
     )
@@ -167,6 +163,9 @@ class DummyFunction:
         self.__signature__.bind(*args, **kwargs)
 
     __signature__: Signature
+
+    def __repr__(self) -> str:
+        return f"<DummyFunction {self.__signature__}>"
 
 
 @given(
