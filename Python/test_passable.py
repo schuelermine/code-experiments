@@ -38,8 +38,12 @@ id_continue_extras = (
 
 
 @composite
-def identifiers(draw: DrawFn, max_length: Optional[int] = None) -> str:
-    length = draw(integers(min_value=1, max_value=max_length))
+def identifiers(
+    draw: DrawFn, max_length: Optional[int] = None, min_length: int = 1
+) -> str:
+    assert min_length < max_length if max_length is not None else True
+    assert min_length >= 1
+    length = draw(integers(min_value=min_length, max_value=max_length))
     string = ""
     string += draw(
         characters(
@@ -54,45 +58,17 @@ def identifiers(draw: DrawFn, max_length: Optional[int] = None) -> str:
                 whitelist_characters=id_continue_extras,
             )
         )
-    assume(not iskeyword(string))
-    assume(string.isidentifier())
+    assume(is_valid_identifier(string))
     return string
-
-
-@given(identifiers(max_length=10))
-def test_identifiers(name: str) -> None:
-    assert is_valid_identifier(name)
 
 
 def is_valid_identifier(name: str) -> bool:
     return (not iskeyword(name)) and name.isidentifier()
 
 
-@composite
-def parameters(
-    draw: DrawFn,
-    default: Optional[SearchStrategy[object]] = None,
-    have_default: bool = False,
-    kind: Optional[_ParameterKind] = None,
-    max_length: Optional[int] = None,
-) -> Parameter:
-    if kind is None:
-        kind = draw(parameter_kinds)
-    assert kind is not None
-    assert (not have_default) or default is not None
-    if (
-        have_default
-        and draw(booleans())
-        and kind not in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]
-    ):
-        assert (
-            default is not None
-        )  # Satisfies the type checker. This assert should never fail.
-        return Parameter(
-            draw(identifiers(max_length=max_length)), kind, default=draw(default)
-        )
-    else:
-        return Parameter(draw(identifiers(max_length=max_length)), kind)
+@given(identifiers(max_length=10))
+def test_identifiers(name: str) -> None:
+    assert is_valid_identifier(name)
 
 
 parameter_kinds: SearchStrategy[_ParameterKind] = one_of(
@@ -133,10 +109,22 @@ def signatures(
     defaults: SearchStrategy[object],
     *,
     max_param_count: Optional[int] = None,
+    min_param_count: int = 0,
     max_identifier_length: Optional[int] = None,
+    min_identifier_length: int = 1,
 ) -> Signature:
+    assert min_param_count < max_param_count if max_param_count is not None else True
+    assert min_param_count >= 0
+    assert (
+        min_identifier_length < max_identifier_length
+        if max_identifier_length is not None
+        else True
+    )
+    assert min_identifier_length >= 1
     param_kinds = draw(
-        lists(parameter_kinds, max_size=max_param_count).map(prepare_paramkinds)
+        lists(parameter_kinds, max_size=max_param_count, min_size=min_param_count).map(
+            prepare_paramkinds
+        )
     )
     param_count = len(param_kinds)
     param_defaults = draw(
@@ -148,7 +136,9 @@ def signatures(
     )
     param_names = draw(
         lists(
-            identifiers(max_length=max_identifier_length),
+            identifiers(
+                max_length=max_identifier_length, min_length=min_identifier_length
+            ),
             min_size=param_count,
             max_size=param_count,
             unique=True,
@@ -180,8 +170,12 @@ class DummyFunction:
 
 
 @given(
-    signatures(defaults=one_of(none(), integers()), max_identifier_length=3, max_param_count=20),
-    one_of(identifiers(max_length=3), integers(min_value=0)),
+    signatures(
+        defaults=one_of(none(), integers(min_value=-333, max_value=333)),
+        max_identifier_length=3,
+        max_param_count=10000,
+    ),
+    one_of(identifiers(max_length=3), integers(min_value=0, max_value=100)),
 )
 def test_passable(sig: Signature, key: str | int) -> None:
     dummy = DummyFunction(sig)
@@ -200,5 +194,14 @@ def test_passable(sig: Signature, key: str | int) -> None:
     if not passable(dummy, key):
         with raises(TypeError):
             dummy(*args, **kwargs)
-    else:
-        dummy(*args, **kwargs)
+
+
+@given(
+    signatures(
+        defaults=one_of(none(), integers(min_value=-333, max_value=333)),
+        max_identifier_length=3,
+        max_param_count=10000,
+    )
+)
+def test_signatures(sig: Signature) -> None:
+    print(sig)
