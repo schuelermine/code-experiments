@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import TypeAlias, TypeVar, Generic
 
-T = TypeVar("T")
+T = TypeVar("T", covariant=True)
 
 
 @dataclass
