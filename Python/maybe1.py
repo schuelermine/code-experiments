@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Callable, Generic, Optional, TypeVar, cast, overload
+from typing import Callable, Generic, Optional, TypeVar, cast, overload, Any
 
 
 T = TypeVar("T")
 U = TypeVar("U")
+C = TypeVar("C", bound="Maybe[Any]")
 
 
 class Maybe(Generic[T]):
@@ -25,6 +26,14 @@ class Maybe(Generic[T]):
         else:
             self.present = True
             self.value = args[0]
+    
+    @classmethod
+    def Just(cls: type[C], value: T) -> C:
+        return cls(value)
+
+    @classmethod
+    def Nothing(cls: type[C]) -> C:
+        return cls()
 
     def assumePresent(self) -> T:
         assert self.present
@@ -56,14 +65,14 @@ class Maybe(Generic[T]):
             return cls(cast(T, cast(Maybe[T], self.value).value))
 
     @classmethod
-    def fromOptional(cls, value: Optional[T], /) -> Maybe[T]:
+    def fromOptional(cls: type[C], value: Optional[T], /) -> C:
         if value is None:
             return cls()
         else:
             return cls(value)
 
     @classmethod
-    def withBool(cls, /, present: bool, value: T) -> Maybe[T]:
+    def withBool(cls: type[C], /, present: bool, value: T) -> C:
         if present:
             return cls(value)
         else:
