@@ -7,13 +7,13 @@ U = TypeVar("U")
 
 
 class Maybe(Protocol[T]):
-    def assumePresent(self) -> T:
+    def assume_present(self) -> T:
         ...
 
     def map(self: Maybe[G], f: Callable[[G], U], /) -> Maybe[U]:
         ...
 
-    def flatMap(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
+    def flatmap(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
         ...
 
     def join(self: Maybe[Maybe[G]]) -> Maybe[G]:
@@ -26,13 +26,13 @@ class Just(Maybe[T]):
     def __init__(self: Just[T], value: T) -> None:
         self.value = value
 
-    def assumePresent(self: Just[G]) -> G:
+    def assume_present(self: Just[G]) -> G:
         return self.value
 
     def map(self: Just[G], f: Callable[[G], U], /) -> Just[U]:
         return Just[U](f(self.value))
 
-    def flatMap(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
+    def flatmap(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
         return f(self.value)
 
     def join(self: Just[Maybe[G]]) -> Maybe[G]:
@@ -51,16 +51,30 @@ class Nothing(Maybe[T]):
         self.present = False
         self.value = None
 
-    def assumePresent(self: Nothing[G]) -> G:
+    def assume_present(self: Nothing[G]) -> G:
         raise MissingValueError()
 
     def map(self: Nothing[G], f: Callable[[G], U], /) -> Nothing[U]:
         return Nothing[U]()
 
-    def flatMap(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
+    def flatmap(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
         return Nothing[U]()
 
     def join(self: Nothing[Maybe[G]]) -> Nothing[G]:
         return Nothing[G]()
 
     __match_args__ = ()
+
+
+def maybe_from_optional(value: Optional[G], /) -> Maybe[G]:
+    if value is None:
+        return Nothing[G]()
+    else:
+        return Just[G](value)
+
+
+def maybe_with_bool(present: bool, value: G) -> Maybe[G]:
+    if present:
+        return Just[G](value)
+    else:
+        return Nothing[G]()

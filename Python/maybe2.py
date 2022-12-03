@@ -12,7 +12,7 @@ class Maybe(ABC, Generic[T]):
     value: Optional[T]
 
     @abstractmethod
-    def assumePresent(self) -> T:
+    def assume_present(self) -> T:
         pass
 
     @abstractmethod
@@ -20,12 +20,26 @@ class Maybe(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def flatMap(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
+    def flatmap(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
         pass
 
     @abstractmethod
     def join(self: Maybe[Maybe[G]]) -> Maybe[G]:
         pass
+
+    @staticmethod
+    def from_optional(value: Optional[G], /) -> Maybe[G]:
+        if value is None:
+            return Nothing[G]()
+        else:
+            return Just[G](value)
+
+    @staticmethod
+    def with_bool(present: bool, value: G) -> Maybe[G]:
+        if present:
+            return Just[G](value)
+        else:
+            return Nothing[G]()
 
 
 class Just(Maybe[T]):
@@ -33,13 +47,13 @@ class Just(Maybe[T]):
         self.present = True
         self.value = value
 
-    def assumePresent(self: Just[G]) -> G:
+    def assume_present(self: Just[G]) -> G:
         return cast(G, self.value)
 
     def map(self: Just[G], f: Callable[[G], U], /) -> Just[U]:
         return Just[U](f(cast(G, self.value)))
 
-    def flatMap(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
+    def flatmap(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
         return f(cast(G, self.value))
 
     def join(self: Just[Maybe[G]]) -> Maybe[G]:
@@ -58,13 +72,13 @@ class Nothing(Maybe[T]):
         self.present = False
         self.value = None
 
-    def assumePresent(self: Nothing[G]) -> G:
+    def assume_present(self: Nothing[G]) -> G:
         raise MissingValueError()
 
     def map(self: Nothing[G], f: Callable[[G], U], /) -> Nothing[U]:
         return Nothing[U]()
 
-    def flatMap(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
+    def flatmap(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
         return Nothing[U]()
 
     def join(self: Nothing[Maybe[G]]) -> Nothing[G]:

@@ -6,6 +6,11 @@ U = TypeVar("U")
 C = TypeVar("C", bound="Maybe[Any]")
 
 
+class MissingValueError(ValueError):
+    "Raised to indicate a potentially missing value was missing."
+    pass
+
+
 class Maybe(Generic[T]):
     present: bool
     value: Optional[T]
@@ -34,8 +39,9 @@ class Maybe(Generic[T]):
     def Nothing(cls: type[C]) -> C:
         return cls()
 
-    def assumePresent(self) -> T:
-        assert self.present
+    def assume_present(self) -> T:
+        if not self.present:
+            raise MissingValueError()
         return cast(T, self.value)
 
     def map(self: Maybe[T], f: Callable[[T], U], /) -> Maybe[U]:
@@ -44,7 +50,7 @@ class Maybe(Generic[T]):
         else:
             return type(self)(f(cast(T, self.value)))
 
-    def flatMap(self: Maybe[T], f: Callable[[T], Maybe[U]], /) -> Maybe[U]:
+    def flatmap(self: Maybe[T], f: Callable[[T], Maybe[U]], /) -> Maybe[U]:
         if not self.present:
             return type(self)()
         else:
@@ -64,14 +70,14 @@ class Maybe(Generic[T]):
             return cls(cast(T, cast(Maybe[T], self.value).value))
 
     @classmethod
-    def fromOptional(cls: type[C], value: Optional[T], /) -> C:
+    def from_optional(cls: type[C], value: Optional[T], /) -> C:
         if value is None:
             return cls()
         else:
             return cls(value)
 
     @classmethod
-    def withBool(cls: type[C], /, present: bool, value: T) -> C:
+    def with_bool(cls: type[C], /, present: bool, value: T) -> C:
         if present:
             return cls(value)
         else:

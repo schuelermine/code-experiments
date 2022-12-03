@@ -1,7 +1,9 @@
 from dataclasses import dataclass
-from typing import TypeAlias, TypeVar, Generic
+from typing import Callable, TypeAlias, TypeVar, Generic, Optional
 
 T = TypeVar("T", covariant=True)
+G = TypeVar("G")
+U = TypeVar("U")
 
 
 @dataclass
@@ -15,3 +17,42 @@ class Just(Generic[T]):
 
 
 Maybe: TypeAlias = Nothing | Just[T]
+
+
+def maybe_from_optional(value: Optional[G], /) -> Maybe[G]:
+    if value is None:
+        return Nothing[G]()
+    else:
+        return Just[G](value)
+
+
+def maybe_with_bool(present: bool, value: G) -> Maybe[G]:
+    if present:
+        return Just[G](value)
+    else:
+        return Nothing[G]()
+
+
+class MissingValueError(ValueError):
+    "Raised to indicate a potentially missing value was missing."
+    pass
+
+
+def assume_present(maybe: Maybe[G], /) -> G:
+    if isinstance(maybe, Nothing):
+        raise MissingValueError
+    return maybe.value
+
+
+def map_maybe(f: Callable[[G], U], maybe: Maybe[G], /) -> Maybe[U]:
+    if isinstance(maybe, Nothing):
+        return Nothing[U]()
+    else:
+        return Just[U](f(maybe.value))
+
+
+def flatmap_maybe(f: Callable[[G], Maybe[U]], maybe: Maybe[G], /) -> Maybe[U]:
+    if isinstance(maybe, Nothing):
+        return Nothing[U]()
+    else:
+        return f(maybe.value)
