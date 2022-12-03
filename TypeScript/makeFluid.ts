@@ -1,4 +1,4 @@
-function makeChainable<This, Args extends unknown[], Result>(f: (this: This, ...args: Args) => Result): (...args: Args) => This {
+function makeFluid<This, Args extends unknown[], Result>(f: (this: This, ...args: Args) => Result): (...args: Args) => This {
     return function(...args) {
         f.apply(this, args);
         return this;
@@ -13,7 +13,7 @@ class Oreo {
     constructor() {
         this.moped = "🛵";
     }
-    getSelf = makeChainable<this, [], void>(noop);
+    getSelf = makeFluid<this, [], void>(noop);
     moped: string;
 }
 
