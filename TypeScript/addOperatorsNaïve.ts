@@ -1,4 +1,4 @@
-function addOperatorsNaïve(num: string, target: number)/*: string[]*/ {
+function addOperatorsNaïve(num: string, target: number): string[] {
     const ops: [string, (n: number, m: number) => number][] = [
         ["+", (n, m) => n + m],
         ["-", (n, m) => n - m],
@@ -18,5 +18,5 @@ function addOperatorsNaïve(num: string, target: number)/*: string[]*/ {
             return result
         })
     }
-    return expressions/*.filter(({value}) => value === target).map(({expression}) => expression)*/
+    return expressions.filter(({value}) => value === target).map(({expression}) => expression)
 }
