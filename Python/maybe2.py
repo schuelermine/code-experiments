@@ -1,9 +1,6 @@
 from __future__ import annotations
-
-
 from abc import ABC, abstractmethod
 from typing import Callable, Generic, Optional, TypeVar, cast
-
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")

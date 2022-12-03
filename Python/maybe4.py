@@ -1,8 +1,5 @@
 from __future__ import annotations
-
-
 from typing import Callable, Optional, TypeVar, cast, Protocol
-
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")

@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Callable, Generic, Optional, TypeVar, cast, overload, Any
 
-
 T = TypeVar("T")
 U = TypeVar("U")
 C = TypeVar("C", bound="Maybe[Any]")
@@ -26,7 +25,7 @@ class Maybe(Generic[T]):
         else:
             self.present = True
             self.value = args[0]
-    
+
     @classmethod
     def Just(cls: type[C], value: T) -> C:
         return cls(value)
@@ -77,5 +76,3 @@ class Maybe(Generic[T]):
             return cls(value)
         else:
             return cls()
-
-    
