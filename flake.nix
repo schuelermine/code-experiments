@@ -9,7 +9,8 @@
             clang
             gdb
             fish
-            haskell.packages.ghc924.ghc
+            (haskell.packages.ghc924.ghc.withPackages
+              (hspkgs: with hspkgs; [ QuickCheck ]))
             openjdk
             nix
             nushell

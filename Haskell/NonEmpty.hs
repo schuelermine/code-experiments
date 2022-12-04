@@ -1,10 +1,9 @@
-{-# LANGUAGE PatternSynonyms #-}
-
 module Data.NonEmpty (
-  NonEmpty()
+  NonEmpty(),
+  getNonEmpty
 ) where
 
-data NonEmpty f a = NonEmpty (f a)
+data NonEmpty f a = NonEmpty { getNonEmpty :: (f a) }
 
 nonEmpty :: Foldable f => f a -> Maybe (NonEmpty f a)
 nonEmpty xs

@@ -32,7 +32,7 @@ class Maybe(Generic[T]):
             self.value = args[0]
 
     @classmethod
-    def Just(cls: type[C], value: T) -> C:
+    def Just(cls: type[C], value: T, /) -> C:
         return cls(value)
 
     @classmethod
@@ -45,20 +45,22 @@ class Maybe(Generic[T]):
         return cast(T, self.value)
 
     def map(self: Maybe[T], f: Callable[[T], U], /) -> Maybe[U]:
+        cls = type(self)
         if not self.present:
-            return type(self)()
+            return cls()
         else:
-            return type(self)(f(cast(T, self.value)))
+            return cls(f(cast(T, self.value)))
 
     def flatmap(self: Maybe[T], f: Callable[[T], Maybe[U]], /) -> Maybe[U]:
+        cls = type(self)
         if not self.present:
-            return type(self)()
+            return cls()
         else:
-            value2 = f(cast(T, self.value))
-            if not value2.present:
-                return type(self)()
+            maybe2 = f(cast(T, self.value))
+            if not maybe2.present:
+                return cls()
             else:
-                return type(self)(cast(U, value2.value))
+                return cls(cast(U, maybe2.value))
 
     def join(self: Maybe[Maybe[T]], /) -> Maybe[T]:
         cls = cast(type[Maybe[T]], type(self))
