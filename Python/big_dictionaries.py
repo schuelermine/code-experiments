@@ -1,6 +1,6 @@
 from typing import TypeAlias
 
-rec_dict_type: TypeAlias = dict[int, 'rec_dict_type']
+rec_dict_type: TypeAlias = dict[int, "rec_dict_type"]
 
 big_dictionaries: list[rec_dict_type] = [
     {
