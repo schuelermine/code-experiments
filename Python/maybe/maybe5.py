@@ -51,6 +51,20 @@ class Maybe(Generic[T]):
         else:
             return cls(f(cast(T, self.value)))
 
+    def replace(self: Maybe[T], value: U, /) -> Maybe[U]:
+        cls = type(self)
+        if self.value is cls.sentinel:
+            return cls()
+        else:
+            return cls(value)
+
+    def and_then(self: Maybe[T], maybe: Maybe[U], /) -> Maybe[U]:
+        cls = type(self)
+        if self.value is cls.sentinel:
+            return cls()
+        else:
+            return maybe
+
     def flatmap(self: Maybe[T], f: Callable[[T], Maybe[U]], /) -> Maybe[U]:
         cls = type(self)
         if self.value is cls.sentinel:

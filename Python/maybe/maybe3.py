@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, TypeAlias, TypeVar, Generic, Optional
+from typing import Callable, TypeAlias, TypeVar, Generic, Optional, Any
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")
@@ -51,8 +51,29 @@ def map_maybe(f: Callable[[G], U], maybe: Maybe[G], /) -> Maybe[U]:
         return Just[U](f(maybe.value))
 
 
+def replace_maybe(maybe: Maybe[Any], value: U, /) -> Maybe[U]:
+    if isinstance(maybe, Nothing):
+        return Nothing[U]()
+    else:
+        return Just[U](value)
+
+
+def and_then_maybe(maybe1: Maybe[Any], maybe2: Maybe[U], /) -> Maybe[U]:
+    if isinstance(maybe1, Nothing):
+        return Nothing[U]()
+    else:
+        return maybe2
+
+
 def flatmap_maybe(f: Callable[[G], Maybe[U]], maybe: Maybe[G], /) -> Maybe[U]:
     if isinstance(maybe, Nothing):
         return Nothing[U]()
     else:
         return f(maybe.value)
+
+
+def join_maybe(maybe: Maybe[Maybe[G]]) -> Maybe[G]:
+    if isinstance(maybe, Nothing):
+        return Nothing[G]()
+    else:
+        return maybe.value
