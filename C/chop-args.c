@@ -6,7 +6,7 @@
 
 define_map(string, char *, string, char *, false)
 
-    char *chop_last_char_off_arg(char *string) {
+char *chop_last_char_off_arg(char *string) {
     if (string == NULL)
         return string;
     size_t len2 = strlen(string);

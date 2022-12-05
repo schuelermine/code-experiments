@@ -5,7 +5,7 @@ typedef struct _sll_node {
     struct _sll_node *next;
 } sll_node;
 
-typedef sll_node * sll;
+typedef sll_node *sll;
 
 sll sll_construct(int value, sll next) {
     sll list = malloc(sizeof(sll_node));
@@ -14,9 +14,7 @@ sll sll_construct(int value, sll next) {
     return list;
 }
 
-sll sll_singleton(int value) {
-    return sll_construct(value, NULL);
-}
+sll sll_singleton(int value) { return sll_construct(value, NULL); }
 
 void sll_destruct(sll list) {
     sll current = list;

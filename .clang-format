@@ -3,4 +3,5 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 StatementMacros:
   - define_foreach
+  - define_map
 ---

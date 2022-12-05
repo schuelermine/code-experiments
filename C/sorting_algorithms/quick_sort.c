@@ -1,5 +1,6 @@
 #include "quick_sort.h"
 #include "swap.h"
+#include <stddef.h>
 
 void quick_sort(int *arr, size_t len) {
     if (len == 0)
