@@ -1,15 +1,75 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Callable, Generic, Optional, TypeVar, cast
+from abc import ABCMeta, abstractmethod
+from typing import Callable, Generic, NoReturn, Optional, TypeVar, cast
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")
 U = TypeVar("U")
 
 
-class Maybe(ABC, Generic[T]):
+class CallableABCMetaDict(
+    dict[str, object],
+):
+    class_call: object | None
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        self.class_call = None
+        super().__init__(self, *args, **kwargs)
+
+    def __setitem__(self, key: str, value: object, /) -> None:
+        if key == "__class_call__":
+            self.class_call = value
+        else:
+            super().__setitem__(key, value)
+
+
+class CallableABCMeta(ABCMeta):
+    class_call: object | None
+
+    @classmethod
+    def __prepare__(
+        cls: object, __name: str, __bases: tuple[type, ...], **kwds: object
+    ) -> CallableABCMetaDict:
+        return CallableABCMetaDict()
+
+    def __init__(
+        self, name: str, bases: tuple[type, ...], namespace: CallableABCMetaDict
+    ) -> None:
+        self.class_call = namespace.class_call
+        super().__init__(name, bases, namespace)
+
+    def __call__(self, *args: object, **kwds: object) -> object:
+        if self.class_call is not None and callable(self.class_call):
+            return self.class_call(*args, **kwds)
+        return super().__call__(*args, **kwds)
+
+
+class CallableABC(metaclass=CallableABCMeta):
+    pass
+
+
+class Example(CallableABC):
+    @classmethod
+    def __class_call__(cls, a: object) -> tuple[()]:
+        return ()
+
+
+class Maybe(CallableABC, Generic[T]):
     present: bool
     value: Optional[T]
+
+    @classmethod
+    def __class_call__(cls, *args: G, **kwargs: NoReturn) -> Maybe[G]:
+        if kwargs != {}:
+            raise TypeError("Maybe() takes no keyword arguments")
+        argc = len(args)
+        if argc > 1:
+            raise TypeError(
+                f"Maybe() takes up to one positional argument, but {argc} were given"
+            )
+        if argc == 0:
+            return Nothing()
+        return Just(args[0])
 
     @abstractmethod
     def assume_present(self) -> T:

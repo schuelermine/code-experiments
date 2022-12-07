@@ -23,6 +23,6 @@ class _dummy_dict(dict[str, object]):
 class dummy(type):
     @classmethod
     def __prepare__(
-        metacls: object, __name: str, __bases: tuple[type, ...], **kwds: object
+        cls: object, __name: str, __bases: tuple[type, ...], **kwds: object
     ) -> Mapping[str, object]:
         return _dummy_dict()

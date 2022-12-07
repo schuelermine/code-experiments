@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import Callable, Generic, Optional, TypeVar, cast, overload, Any
+from typing import Callable, Generic, Optional, TypeVar, cast, overload
 
 T = TypeVar("T")
 U = TypeVar("U")
-C = TypeVar("C", bound="Maybe[Any]")
+C = TypeVar("C", bound="Maybe[object]")
 
 
 class MissingValueError(ValueError):

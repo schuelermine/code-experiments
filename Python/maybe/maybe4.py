@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, TypeVar, Any, Protocol
+from typing import Callable, Optional, TypeVar, Protocol
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")
@@ -13,10 +13,10 @@ class Maybe(Protocol[T]):
     def map(self: Maybe[G], f: Callable[[G], U], /) -> Maybe[U]:
         ...
 
-    def replace(self: Maybe[Any], value: U, /) -> Maybe[U]:
+    def replace(self: Maybe[object], value: U, /) -> Maybe[U]:
         ...
 
-    def and_then(self: Maybe[Any], maybe: Maybe[U], /) -> Maybe[U]:
+    def and_then(self: Maybe[object], maybe: Maybe[U], /) -> Maybe[U]:
         ...
 
     def flatmap(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
@@ -38,10 +38,10 @@ class Just(Maybe[T]):
     def map(self: Just[G], f: Callable[[G], U], /) -> Just[U]:
         return Just[U](f(self.value))
 
-    def replace(self: Just[Any], value: U, /) -> Just[U]:
+    def replace(self: Just[object], value: U, /) -> Just[U]:
         return Just[U](value)
 
-    def and_then(self: Just[Any], maybe: Maybe[U], /) -> Maybe[U]:
+    def and_then(self: Just[object], maybe: Maybe[U], /) -> Maybe[U]:
         return maybe
 
     def flatmap(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
@@ -69,10 +69,10 @@ class Nothing(Maybe[T]):
     def map(self: Nothing[G], f: Callable[[G], U], /) -> Nothing[U]:
         return Nothing[U]()
 
-    def replace(self: Nothing[Any], value: U, /) -> Nothing[U]:
+    def replace(self: Nothing[object], value: U, /) -> Nothing[U]:
         return Nothing[U]()
 
-    def and_then(self: Nothing[Any], maybe: Maybe[U], /) -> Nothing[U]:
+    def and_then(self: Nothing[object], maybe: Maybe[U], /) -> Nothing[U]:
         return Nothing[U]()
 
     def flatmap(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
