@@ -20,8 +20,7 @@ class CallableABCMetaDict(
     def __setitem__(self, key: str, value: object, /) -> None:
         if key == "__class_call__":
             self.class_call = value
-        else:
-            super().__setitem__(key, value)
+        super().__setitem__(key, value)
 
 
 class CallableABCMeta(ABCMeta):
