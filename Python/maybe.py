@@ -231,6 +231,9 @@ class Maybe(CallableABC, Generic[T]):
     def __or__(self: Maybe[G], other: Maybe[G]) -> Maybe[G]:
         return self.alternatively(other)
 
+    def __rshift__(self: Maybe[object], other: Maybe[U]) -> Maybe[U]:
+        return self.then(other)
+
 
 class Just(Maybe[T]):
     """
