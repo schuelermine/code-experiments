@@ -1,7 +1,10 @@
 from __future__ import annotations
 from abc import ABCMeta, abstractmethod
+from collections.abc import Callable, Iterator
 from inspect import signature
-from typing import Callable, Generic, NoReturn, Optional, TypeVar, cast, overload
+from typing import Generic, NoReturn, Optional, TypeVar, cast, overload
+
+__all__ = ("Maybe", "Just", "Nothing", "MissingValueError")
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")
@@ -11,20 +14,22 @@ U = TypeVar("U")
 class CallableABCMetaDict(
     dict[str, object],
 ):
-    class_call: object | None
+    _class_call: object | None
+
+    __slots__ = ("_class_call",)
 
     def __init__(self, *args: object, **kwargs: object) -> None:
-        self.class_call = None
+        self._class_call = None
         super().__init__(self, *args, **kwargs)
 
     def __setitem__(self, key: str, value: object, /) -> None:
-        if key == "__class_call__":
-            self.class_call = value
+        if key == "_class_call":
+            self._class_call = value
         super().__setitem__(key, value)
 
 
 class CallableABCMeta(ABCMeta):
-    class_call: object | None
+    _class_call: object | None
 
     @classmethod
     def __prepare__(
@@ -35,24 +40,24 @@ class CallableABCMeta(ABCMeta):
     def __init__(
         self, name: str, bases: tuple[type, ...], namespace: CallableABCMetaDict
     ) -> None:
-        self.class_call = namespace.class_call
+        self._class_call = namespace._class_call
         super().__init__(name, bases, namespace)
 
     def __call__(self, *args: object, **kwds: object) -> object:
-        class_call = self.class_call
-        if class_call is not None and callable(class_call):
+        _class_call = self._class_call
+        if _class_call is not None and callable(_class_call):
             try:
                 # Try to catch incorrect args early to hide __class_call__
-                sig = signature(class_call)
+                sig = signature(_class_call)
                 sig.bind(*args, **kwds)
             except ValueError:  # Signature does not exist
                 pass
-            return class_call(*args, **kwds)
+            return _class_call(*args, **kwds)
         return super().__call__(*args, **kwds)
 
 
 class CallableABC(metaclass=CallableABCMeta):
-    pass
+    __slots__ = ()
 
 
 class Maybe(CallableABC, Generic[T]):
@@ -68,23 +73,23 @@ class Maybe(CallableABC, Generic[T]):
     See also: Just, Nothing
     """
 
+    __slots__ = ("present", "value")
+
     present: bool
     value: Optional[T]
 
-    __slots__ = ("present", "value")
-
     @overload
     @classmethod
-    def __class_call__(cls, arg: G, /) -> Just[G]:
+    def _class_call(cls, arg: G, /) -> Just[G]:
         ...
 
     @overload
     @classmethod
-    def __class_call__(cls) -> Nothing[NoReturn]:
+    def _class_call(cls) -> Nothing[NoReturn]:
         ...
 
     @classmethod
-    def __class_call__(cls, *args: G) -> Maybe[G]:
+    def _class_call(cls, *args: G) -> Maybe[G]:
         argc = len(args)
         if argc > 1:
             raise TypeError(
@@ -153,9 +158,13 @@ class Maybe(CallableABC, Generic[T]):
         maybe.join() is equivalent to maybe.bind(lambda x: x).
         """
         pass
-    
+
     @abstractmethod
-    def get(self: Maybe[G], /, default: G,) -> G:
+    def get(
+        self: Maybe[G],
+        /,
+        default: G,
+    ) -> G:
         """
         Return the value if it is present, otherwise, return default.
         """
@@ -183,6 +192,9 @@ class Maybe(CallableABC, Generic[T]):
         else:
             return Nothing[G]()
 
+    def __or__(self: Maybe[G], other: Maybe[G]) -> Maybe[G]:
+        return self.alternatively(other)
+
 
 class Just(Maybe[T]):
     """
@@ -193,6 +205,8 @@ class Just(Maybe[T]):
     Just(value) is supported in pattern matching.
     See also: Maybe, Nothing
     """
+
+    __slots__ = ("present", "value")
 
     def __init__(self: Just[T], value: T, /) -> None:
         self.present = True
@@ -221,9 +235,32 @@ class Just(Maybe[T]):
 
     def get(self: Maybe[G], /, default: G) -> G:
         return cast(G, self.value)
-    
-    def __repr__(self) -> str:
+
+    def __repr__(self: Just[object]) -> str:
         return f"Just({self.value!r})"
+
+    def __eq__(self: Just[object], other: object) -> bool:
+        if isinstance(other, Just):
+            return self.value == other.value
+        elif isinstance(other, Nothing):
+            return False
+        else:
+            return NotImplemented
+
+    def __hash__(self: Just[object]) -> int:
+        return hash((self.value, self.present))
+
+    def __bool__(self: Just[object]) -> bool:
+        return True
+
+    def __len__(self: Just[object]) -> int:
+        return 1
+
+    def __iter__(self: Just[G]) -> Iterator[G]:
+        return iter((cast(G, self.value),))
+
+    def __contains__(self, item: object) -> bool:
+        return self.value == item
 
     __match_args__ = ("value",)
 
@@ -243,6 +280,8 @@ class Nothing(Maybe[T]):
     See also: Maybe, Just
     """
 
+    __slots__ = ("present", "value")
+
     def __init__(self: Nothing[T]) -> None:
         self.present = False
         self.value = None
@@ -259,7 +298,7 @@ class Nothing(Maybe[T]):
     def then(self: Nothing[object], maybe: Maybe[U], /) -> Nothing[U]:
         return Nothing[U]()
 
-    def alternatively(self: Nothing[object], maybe: Maybe[G], /) -> Maybe[G]:
+    def alternatively(self: Nothing[G], maybe: Maybe[G], /) -> Maybe[G]:
         return maybe
 
     def bind(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
@@ -270,8 +309,31 @@ class Nothing(Maybe[T]):
 
     def get(self: Nothing[object], /, default: G) -> G:
         return default
-    
-    def __repr__(self) -> str:
+
+    def __repr__(self: Nothing[object]) -> str:
         return "Nothing()"
+
+    def __eq__(self: Nothing[object], other: object) -> bool:
+        if isinstance(other, Nothing):
+            return True
+        elif isinstance(other, Just):
+            return False
+        else:
+            return NotImplemented
+
+    def __hash__(self: Nothing[object]) -> int:
+        return hash(())
+
+    def __bool__(self: Nothing[object]) -> bool:
+        return False
+
+    def __len__(self: Nothing[object]) -> int:
+        return 0
+
+    def __iter__(self: Nothing[G]) -> Iterator[G]:
+        return iter(())
+
+    def __contains__(self, item: object) -> bool:
+        return False
 
     __match_args__ = ()
