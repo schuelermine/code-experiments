@@ -2,13 +2,14 @@ from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable, Iterator
 from inspect import signature
-from typing import Generic, NoReturn, Optional, TypeVar, cast, overload
+from typing import Any, Generic, NoReturn, Optional, TypeVar, cast, overload
 
 __all__ = ("Maybe", "Just", "Nothing", "MissingValueError")
 
 T = TypeVar("T", covariant=True)
 G = TypeVar("G")
 U = TypeVar("U")
+V = TypeVar("V")
 
 
 class CallableABCMetaDict(
@@ -69,6 +70,7 @@ class Maybe(CallableABC, Generic[T]):
     Calling Maybe does not construct a direct instance of Maybe.
     Property Maybe.present indicates if a value is present.
     Property Maybe.value is the value if it is present.
+    To override the constructors used for the static methods when inheriting, redefine `_class_call` in your class to match the behavior of Maybe().
     Just and Nothing support pattern matching.
     See also: Just, Nothing
     """
@@ -96,14 +98,21 @@ class Maybe(CallableABC, Generic[T]):
                 f"Maybe() takes up to one positional argument, but {argc} were given"
             )
         if argc == 0:
-            return Nothing()
-        return Just(args[0])
+            return Nothing[G]()
+        return Just[G](args[0])
 
     @abstractmethod
     def assume_present(self) -> T:
         """
         Return the value, assuming it exists.
         Raises MissingValueError if value is missing.
+        """
+        pass
+
+    @abstractmethod
+    def get(self: Maybe[G], /, default: G) -> G:
+        """
+        Return the value if it is present, otherwise, return default.
         """
         pass
 
@@ -154,43 +163,70 @@ class Maybe(CallableABC, Generic[T]):
     def join(self: Maybe[Maybe[G]]) -> Maybe[G]:
         """
         Flatten a Maybe value potentially containing another Maybe value.
-        Returns the value, if it exists, and Nothing() otherwise.
+        Returns the value, if it exists, and a missing value otherwise.
         maybe.join() is equivalent to maybe.bind(lambda x: x).
         """
         pass
 
     @abstractmethod
-    def get(
-        self: Maybe[G],
-        /,
-        default: G,
-    ) -> G:
+    def ap(self: Maybe[Callable[[G], U]], maybe: Maybe[G], /) -> Maybe[U]:
         """
-        Return the value if it is present, otherwise, return default.
+        Apply a function from inside a Maybe value onto the value in another Maybe value, if both exist.
+        Returns a missing value if any of the Maybe operands is missing.
+        maybe1.ap(f, maybe2) is equivalent to maybe1.flatmap(lambda f: maybe2.flatmap(lambda x: f(x)))
         """
         pass
 
-    @staticmethod
-    def from_optional(value: Optional[G], /) -> Maybe[G]:
+    @classmethod
+    def lift2(
+        cls, f: Callable[[G, U], V], maybe1: Maybe[G], maybe2: Maybe[U]
+    ) -> Maybe[V]:
+        """
+        Apply a function over two Maybe values, returning a missing value if any inputs were missing.
+        Maybe.lift2(f, maybe1, maybe2) is equivalent to maybe1.map(lambda x: lambda y: f(x, y)).ap(maybe2)
+        """
+        return maybe1.map(lambda x: lambda y: f(x, y)).ap(maybe2)
+
+    @classmethod
+    def lift(cls: Any, f: Callable[..., G], *args: Maybe[object]) -> Maybe[G]:
+        """
+        Apply a function that takes multiple arguments over multiple Maybe values, returning a missing value if any inputs were missing.
+        This is a general version of Maybe.lift2.
+        """
+        values: list[object] = []
+        is_missing = False
+        for maybe in args:
+            if maybe.present:
+                values.append(maybe.value)
+            else:
+                is_missing = True
+                break
+        if is_missing:
+            return cls[G]()
+        else:
+            return cls[G](f(*values))
+
+    @classmethod
+    def from_optional(cls: Any, value: Optional[G], /) -> Maybe[G]:
         """
         Create a Maybe value from a value that is potentially None.
-        Returns Just(value) if value is not None, else returns Nothing().
+        Returns a present value if value is not None, else returns a missing value.
         """
         if value is None:
-            return Nothing[G]()
+            return cls[G]()
         else:
-            return Just[G](value)
+            return cls[G](value)
 
-    @staticmethod
-    def with_bool(present: bool, value: G) -> Maybe[G]:
+    @classmethod
+    def with_bool(cls: Any, present: bool, value: G) -> Maybe[G]:
         """
         Create a Maybe value from a value and a boolean.
-        Return Nothing() if present is False, else returns Just(value).
+        Returns a missing value if present is False, else returns a present value.
         """
         if present:
-            return Just[G](value)
+            return cls[G](value)
         else:
-            return Nothing[G]()
+            return cls[G]()
 
     def __or__(self: Maybe[G], other: Maybe[G]) -> Maybe[G]:
         return self.alternatively(other)
@@ -215,6 +251,9 @@ class Just(Maybe[T]):
     def assume_present(self: Just[G]) -> G:
         return cast(G, self.value)
 
+    def get(self: Maybe[G], /, default: G) -> G:
+        return cast(G, self.value)
+
     def map(self: Just[G], f: Callable[[G], U], /) -> Just[U]:
         return Just[U](f(cast(G, self.value)))
 
@@ -233,8 +272,8 @@ class Just(Maybe[T]):
     def join(self: Just[Maybe[G]]) -> Maybe[G]:
         return cast(Maybe[G], self.value)
 
-    def get(self: Maybe[G], /, default: G) -> G:
-        return cast(G, self.value)
+    def ap(self: Just[Callable[[G], U]], maybe: Maybe[G]) -> Maybe[U]:
+        return maybe.map(cast(Callable[[G], U], self.value))
 
     def __repr__(self: Just[object]) -> str:
         return f"Just({self.value!r})"
@@ -289,6 +328,9 @@ class Nothing(Maybe[T]):
     def assume_present(self: Nothing[G]) -> G:
         raise MissingValueError()
 
+    def get(self: Nothing[object], /, default: G) -> G:
+        return default
+
     def map(self: Nothing[G], f: Callable[[G], U], /) -> Nothing[U]:
         return Nothing[U]()
 
@@ -307,8 +349,8 @@ class Nothing(Maybe[T]):
     def join(self: Nothing[Maybe[G]]) -> Nothing[G]:
         return Nothing[G]()
 
-    def get(self: Nothing[object], /, default: G) -> G:
-        return default
+    def ap(self: Nothing[Callable[[G], U]], maybe: Maybe[G]) -> Nothing[U]:
+        return Nothing[U]()
 
     def __repr__(self: Nothing[object]) -> str:
         return "Nothing()"
