@@ -58,14 +58,14 @@ def replace_maybe(maybe: Maybe[object], value: U, /) -> Maybe[U]:
         return Just[U](value)
 
 
-def and_then_maybe(maybe1: Maybe[object], maybe2: Maybe[U], /) -> Maybe[U]:
+def then_maybe(maybe1: Maybe[object], maybe2: Maybe[U], /) -> Maybe[U]:
     if isinstance(maybe1, Nothing):
         return Nothing[U]()
     else:
         return maybe2
 
 
-def flatmap_maybe(f: Callable[[G], Maybe[U]], maybe: Maybe[G], /) -> Maybe[U]:
+def bind_maybe(f: Callable[[G], Maybe[U]], maybe: Maybe[G], /) -> Maybe[U]:
     if isinstance(maybe, Nothing):
         return Nothing[U]()
     else:

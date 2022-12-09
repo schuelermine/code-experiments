@@ -24,12 +24,13 @@ class Maybe(Generic[T]):
         ...
 
     def __init__(self, /, *args: T) -> None:
-        if len(args) == 0:
-            self.present = False
-            self.value = None
-        else:
-            self.present = True
-            self.value = args[0]
+        match args:
+            case ():
+                self.present = False
+                self.value = None
+            case (arg,):
+                self.present = True
+                self.value = arg
 
     @classmethod
     def Just(cls: type[C], value: T, /) -> C:
@@ -58,13 +59,13 @@ class Maybe(Generic[T]):
         else:
             return cls(value)
 
-    def and_then(self: Maybe[T], maybe: Maybe[U], /) -> Maybe[U]:
+    def then(self: Maybe[T], maybe: Maybe[U], /) -> Maybe[U]:
         if not self.present:
             return type(self)()
         else:
             return maybe
 
-    def flatmap(self: Maybe[T], f: Callable[[T], Maybe[U]], /) -> Maybe[U]:
+    def bind(self: Maybe[T], f: Callable[[T], Maybe[U]], /) -> Maybe[U]:
         cls = type(self)
         if not self.present:
             return cls()

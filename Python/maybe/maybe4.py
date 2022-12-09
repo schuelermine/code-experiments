@@ -16,10 +16,10 @@ class Maybe(Protocol[T]):
     def replace(self: Maybe[object], value: U, /) -> Maybe[U]:
         ...
 
-    def and_then(self: Maybe[object], maybe: Maybe[U], /) -> Maybe[U]:
+    def then(self: Maybe[object], maybe: Maybe[U], /) -> Maybe[U]:
         ...
 
-    def flatmap(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
+    def bind(self: Maybe[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
         ...
 
     def join(self: Maybe[Maybe[G]]) -> Maybe[G]:
@@ -41,10 +41,10 @@ class Just(Maybe[T]):
     def replace(self: Just[object], value: U, /) -> Just[U]:
         return Just[U](value)
 
-    def and_then(self: Just[object], maybe: Maybe[U], /) -> Maybe[U]:
+    def then(self: Just[object], maybe: Maybe[U], /) -> Maybe[U]:
         return maybe
 
-    def flatmap(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
+    def bind(self: Just[G], f: Callable[[G], Maybe[U]], /) -> Maybe[U]:
         return f(self.value)
 
     def join(self: Just[Maybe[G]]) -> Maybe[G]:
@@ -72,10 +72,10 @@ class Nothing(Maybe[T]):
     def replace(self: Nothing[object], value: U, /) -> Nothing[U]:
         return Nothing[U]()
 
-    def and_then(self: Nothing[object], maybe: Maybe[U], /) -> Nothing[U]:
+    def then(self: Nothing[object], maybe: Maybe[U], /) -> Nothing[U]:
         return Nothing[U]()
 
-    def flatmap(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
+    def bind(self: Nothing[G], f: Callable[[G], Maybe[U]], /) -> Nothing[U]:
         return Nothing[U]()
 
     def join(self: Nothing[Maybe[G]]) -> Nothing[G]:
