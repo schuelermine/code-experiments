@@ -25,6 +25,10 @@
             nixfmt
             clang-tools
             ormolu
+            cargo
+            rustc
+            rustfmt
+            clippy
           ];
         };
       });

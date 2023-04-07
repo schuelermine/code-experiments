@@ -5,3 +5,7 @@ version = 3
 [[package]]
 name = "leading_zeros_le"
 version = "0.1.0"
+
+[[package]]
+name = "noop"
+version = "0.1.0"
