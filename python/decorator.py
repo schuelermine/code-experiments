@@ -20,9 +20,10 @@ def decorator(x: Callable[[D], T]) -> Callable[[D], T]:
 
 def decorator(
     x: str | int | Callable[[D], T]
-) -> Callable[[D], T] | Callable[
-    [Callable[..., T]], Callable[[D], T] | Callable[..., Callable[[D], T]]
-]:
+) -> (
+    Callable[[D], T]
+    | Callable[[Callable[..., T]], Callable[[D], T] | Callable[..., Callable[[D], T]]]
+):
     """
     Transform a plain function that takes multiple parameters into a parametrized decorator in one of its parameters.
     Call as @decorator to take the value to be decorated as the first argument.
@@ -56,7 +57,6 @@ def decorator(
         if len(params) == 1:
             return dec
         if isinstance(key, int):
-
             if not (
                 sum(
                     1
@@ -81,7 +81,6 @@ def decorator(
                 return tuple(args_), kwargs
 
         elif isinstance(key, str):
-
             if not any(
                 param.kind is Parameter.VAR_KEYWORD
                 or (
@@ -124,7 +123,6 @@ def decorator(
     if callable(x):
         return _decorator(x, 0)
     else:
-
         y: str | int = x
 
         @wraps(decorator)
