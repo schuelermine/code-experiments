@@ -1,7 +1,7 @@
 class SlotsNamespaceMeta(type):
-    def __call__(self, name, *args) -> Any:
+    def __call__(self, name, *args):
 
-        def __init__(self, **kwargs) -> None:
+        def __init__(self, **kwargs):
             for arg in args:
                 missing_key = False
                 try:
@@ -19,7 +19,7 @@ class SlotsNamespaceMeta(type):
 
         __init__.__qualname__ = f"{name}.__init__"
 
-        def __repr__(self) -> str:
+        def __repr__(self):
             return f"{name}(" + ", ".join(f"{arg}={getattr(self, arg)!r}" for arg in args) + ")"
 
         __repr__.__qualname__ = f"{name}.__repr__"
@@ -27,7 +27,7 @@ class SlotsNamespaceMeta(type):
         return super().__call__(name, (), namespace)
 
 class SlotsNamespace(type, metaclass=SlotsNamespaceMeta):
-    def __repr__(self) -> str:
+    def __repr__(self):
         return f"<slots namespace {self.__name__!r}>"
 
 __all__ = ("SlotsNamespace",)
