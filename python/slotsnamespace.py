@@ -1,10 +1,7 @@
-from __future__ import annotations
-from typing import Any
-
 class SlotsNamespaceMeta(type):
-    def __call__(self, name: str, *args: str) -> Any:
+    def __call__(self, name, *args) -> Any:
 
-        def __init__(self: object, **kwargs: object) -> None:
+        def __init__(self, **kwargs) -> None:
             for arg in args:
                 missing_key = False
                 try:
@@ -22,7 +19,7 @@ class SlotsNamespaceMeta(type):
 
         __init__.__qualname__ = f"{name}.__init__"
 
-        def __repr__(self: object) -> str:
+        def __repr__(self) -> str:
             return f"{name}(" + ", ".join(f"{arg}={getattr(self, arg)!r}" for arg in args) + ")"
 
         __repr__.__qualname__ = f"{name}.__repr__"
@@ -30,6 +27,7 @@ class SlotsNamespaceMeta(type):
         return super().__call__(name, (), namespace)
 
 class SlotsNamespace(type, metaclass=SlotsNamespaceMeta):
-    pass
+    def __repr__(self) -> str:
+        return f"<slots namespace {self.__name__!r}>"
 
 __all__ = ("SlotsNamespace",)
