@@ -30,7 +30,7 @@ class hybridmethod(Generic[P, R, Obj]):
         if objtype is None and obj is not None:
             objtype = type(obj)
 
-        assert objtype is not None
+        assert objtype is not None, "descriptor called with not enough information"
         f: Callable[Concatenate[Obj, P], R] | Callable[P, R]
         if obj is None and isinstance(objtype, type):
 
@@ -49,21 +49,3 @@ class hybridmethod(Generic[P, R, Obj]):
             f = h
 
         return f
-
-
-class Echoer:
-    text: str
-    
-    def __init__(self, text: str | Echoer, /):
-        if isinstance(text, type(self)):
-            self.text = text.text
-        else:
-            assert isinstance(text, str)
-            self.text = text
-    
-    @hybridmethod
-    def echo(cls: type[Echoer], self: Echoer, /) -> None:
-        if not isinstance(self, cls):
-            self = cls(self)
-
-        print(self.text)
