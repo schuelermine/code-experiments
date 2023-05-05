@@ -7,10 +7,7 @@ class SlotsNamespaceMeta(type):
                 try:
                     setattr(self, arg, kwargs[arg])
                 except KeyError:
-                    missing_key = True
-
-                if missing_key:
-                    raise TypeError(f"{arg!r} is a required keyword argument for {name}()")
+                    raise TypeError(f"{arg!r} is a required keyword argument for {name}()") from None
 
                 del kwargs[arg]
 
