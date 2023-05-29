@@ -33,6 +33,8 @@ class Demonstration {
         break;
       case "Case 1 & Print":
         System.out.println("Case 1");
+        value = 1;
+        break;
       case "Case 2":
         value = 2;
         break;

@@ -1,4 +1,4 @@
-AALL := chop-args printenv
+AALL := chop-args printenv orbit
 ALL := sorting_algorithms $(AALL)
 CC := clang
 STD := c11
@@ -23,6 +23,9 @@ chop-args: chop-args.o printstrv.o
 
 printenv: printenv.o envc.o
 	$(CC) $(CPPFLAGS) $^ $(CFLAGS) -o $@
+
+orbit: orbit.o
+	$(CC) $(CPPFLAGS) -lmpfr -lm $^ $(CFLAGS) -o $@
 
 .PHONY: clean
 clean: clean_sorting_algorithms

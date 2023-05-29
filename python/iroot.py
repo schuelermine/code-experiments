@@ -7,6 +7,9 @@ def iroot(radicand: int, degree: int = 2, *, bits: int = 1) -> int:
             f"radicand parameter of iroot() cannot be negative, got {radicand}"
         )
 
+    if degree < 1:
+        raise ValueError(f"degree parameter of iroot() must be positive, got {degree}")
+
     base = 1 << bits
     shamt = degree * bits
     mask = (1 << shamt) - 1

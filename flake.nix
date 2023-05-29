@@ -3,8 +3,9 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
+        devShells.default = pkgs.stdenv.mkDerivation {
+          name = "env";
+          nativeBuildInputs = with pkgs; [
             bash
             clang
             gdb
@@ -17,9 +18,10 @@
             powershell
             nodePackages.typescript
             nodejs
-            python3
-            python3Packages.hypothesis
-            python3Packages.pytest
+            (python3.withPackages (pypkgs: with pypkgs; [
+              hypothesis
+              pytest
+            ]))
             mypy
             black
             nixfmt
@@ -29,6 +31,10 @@
             rustc
             rustfmt
             clippy
+            bear
+          ];
+          buildInputs = with pkgs; [
+            mpfr
           ];
         };
       });

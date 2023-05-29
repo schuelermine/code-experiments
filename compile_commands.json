@@ -1,0 +1,242 @@
+[
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "demonstrate_sorts.o",
+      "demonstrate_sorts.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/demonstrate_sorts.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/demonstrate_sorts.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "bubble_sort.o",
+      "bubble_sort.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/bubble_sort.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/bubble_sort.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "count_sort.o",
+      "count_sort.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/count_sort.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/count_sort.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "insertion_sort.o",
+      "insertion_sort.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/insertion_sort.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/insertion_sort.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "quick_sort.o",
+      "quick_sort.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/quick_sort.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/quick_sort.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "selection_sort.o",
+      "selection_sort.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/selection_sort.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/selection_sort.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "merge_sort.o",
+      "merge_sort.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/merge_sort.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/merge_sort.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "get_least_index.o",
+      "get_least_index.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/get_least_index.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/get_least_index.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "swap.o",
+      "swap.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/swap.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/swap.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "printintv.o",
+      "printintv.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/printintv.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/sorting_algorithms/printintv.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "chop-args.o",
+      "chop-args.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/chop-args.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/chop-args.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "printstrv.o",
+      "printstrv.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/printstrv.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/printstrv.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "printenv.o",
+      "printenv.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/printenv.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/printenv.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "envc.o",
+      "envc.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/envc.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/envc.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/fam63d3x0fv1mb9i7igqikqzk1ngmcdx-clang-wrapper-11.1.0/bin/clang",
+      "-c",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wpedantic",
+      "-o",
+      "orbit.o",
+      "orbit.c"
+    ],
+    "directory": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c",
+    "file": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/orbit.c",
+    "output": "/home/anselmschueler/Documents/git/github.com/schuelermine/code-experiments/c/orbit.o"
+  }
+]

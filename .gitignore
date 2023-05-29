@@ -1,6 +1,7 @@
-.direnv
-a.out
-__pycache__
-.mypy_cache
-.hypothesis
-target
+/.direnv
+**/a.out
+**/__pycache__
+**/.mypy_cache
+**/.hypothesis
+**/target
+**/*.class
