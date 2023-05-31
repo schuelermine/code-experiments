@@ -18,7 +18,7 @@ def iroot(radicand: int, degree: int = 2, *, bits: int = 1) -> int:
     blocks = ((radicand >> (shamt * i)) & mask for i in range(block_count - 1, -1, -1))
     for alpha in blocks:
         extracted_power_shifted = (extracted**base) << shamt
-        extracted_shifted = extracted << bits  # B_y
+        extracted_shifted = extracted << bits
         remainder_shifted_plus_alpha = (remainder << shamt) + alpha
         min_beta = 0
         max_beta = base
@@ -41,7 +41,6 @@ def iroot(radicand: int, degree: int = 2, *, bits: int = 1) -> int:
             else:
                 max_beta = beta_candidate - 1
 
-        beta = max_beta
         extracted = next_extracted
         remainder = next_remainder
 
