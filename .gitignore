@@ -5,3 +5,4 @@
 **/.hypothesis
 **/target
 **/*.class
+**/compile_commands.json
