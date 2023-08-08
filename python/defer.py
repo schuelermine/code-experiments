@@ -1,9 +1,9 @@
 class DeferMut:
     __slots__ = ("obj", "ops")
 
-    def __init__(self, obj):
+    def __init__(self, obj, ops=None):
         self.obj = obj
-        self.ops = []
+        self.ops = [] if ops is None else ops
 
     def run(self):
         for op in self.ops:
