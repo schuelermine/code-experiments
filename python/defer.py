@@ -12,7 +12,7 @@ class DeferMut:
         self.ops.clear()
 
     def __getattribute__(self, name):
-        if name in ["obj", "ops", "run"]:
+        if name in ["obj", "ops"]:
             return object.__getattribute__(self, name)
 
         val = getattr(self.obj, name)
@@ -46,7 +46,7 @@ class DeferCon:
         return obj
 
     def __getattribute__(self, name: str):
-        if name in ["obj", "ops", "run"]:
+        if name in ["obj", "ops"]:
             return object.__getattribute__(self, name)
 
         val = getattr(self.obj, name)
