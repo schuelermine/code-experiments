@@ -21,6 +21,7 @@
             (python3.withPackages (pypkgs: with pypkgs; [
               hypothesis
               pytest
+              ipython
             ]))
             mypy
             black
