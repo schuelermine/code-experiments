@@ -1,20 +1,7 @@
-from __future__ import annotations
-from collections.abc import Callable
-from functools import partial
-from typing import final, TypeVar, Generic
-
-
-T = TypeVar("T")
-
-
-@final
-class DeferMut(Generic[T]):
-    obj: T
-    ops: list[Callable[[], None]]
-
+class DeferMut:
     __slots__ = ("obj", "ops")
 
-    def __init__(self, obj: T):
+    def __init__(self, obj):
         self.obj = obj
         self.ops = []
 
@@ -24,7 +11,7 @@ class DeferMut(Generic[T]):
 
         self.ops.clear()
 
-    def __getattribute__(self, name: str) -> Callable[..., None]:
+    def __getattribute__(self, name):
         if name in ["obj", "ops", "run"]:
             return object.__getattribute__(self, name)
 
@@ -33,7 +20,6 @@ class DeferMut(Generic[T]):
             return val
 
         def g(*args, **kwargs):
-
             def h():
                 val(*args, **kwargs)
 
@@ -45,25 +31,21 @@ class DeferMut(Generic[T]):
         return f"<DeferMut {self.obj}, queued: {len(self.ops)}>"
 
 
-@final
-class DeferCon(Generic[T]):
-    obj: T
-    ops: list[Callable[[], T]]
-
+class DeferCon:
     __slots__ = ("obj", "ops")
 
-    def __init__(self, obj: T, ops: list[Callable[[], T]] | None = None):
+    def __init__(self, obj, ops=None):
         self.obj = obj
         self.ops = [] if ops is None else ops
 
-    def run(self) -> object:
+    def run(self):
         obj = self.obj
         for op in self.ops:
             obj = op()
 
         return obj
 
-    def __getattribute__(self, name: str) -> Callable[..., DeferCon]:
+    def __getattribute__(self, name: str):
         if name in ["obj", "ops", "run"]:
             return object.__getattribute__(self, name)
 
@@ -72,7 +54,6 @@ class DeferCon(Generic[T]):
             return val
 
         def g(*args, **kwargs):
-
             def h():
                 return val(*args, **kwargs)
 
