@@ -28,7 +28,7 @@ class DeferMut:
         return g
 
     def __repr__(self):
-        return f"<DeferMut {self.obj}, queued: {len(self.ops)}>"
+        return f"<DeferMut {self.obj!r}, queued: {len(self.ops)}>"
 
 
 class DeferCon:
@@ -62,4 +62,4 @@ class DeferCon:
         return g
 
     def __repr__(self):
-        return f"<DeferCon {self.obj}, queued: {len(self.ops)}>"
+        return f"<DeferCon {self.obj!r}, queued: {len(self.ops)}>"
