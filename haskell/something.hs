@@ -21,5 +21,5 @@ f n m = g 1 0 0 where
         | i == n = c
         | otherwise = g (mod (c + p) m) c (i + 1)
 
-main = do
-    n <- (read <$>) . words . T.unpack  
+-- main = do
+--     n <- (read <$>) . words . T.unpack  

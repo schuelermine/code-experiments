@@ -1,16 +1,18 @@
 {
-  outputs = { self, nixpkgs, flake-utils }:
+  inputs.fenix.url = "github:nix-community/fenix";
+  outputs = { self, nixpkgs, flake-utils, fenix }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
+      let pkgs = import nixpkgs { inherit system; };
       in {
         devShells.default = pkgs.stdenv.mkDerivation {
           name = "env";
           nativeBuildInputs = with pkgs; [
+            fenix.packages.${system}.complete.toolchain
             bash
             clang
             gdb
             fish
-            (haskell.packages.ghc924.ghc.withPackages
+            (ghc.withPackages
               (hspkgs: with hspkgs; [ QuickCheck ]))
             openjdk
             nix
